@@ -1,0 +1,6 @@
+.dashboard-performance {
+  padding-top: 38px;
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 125px;
+}

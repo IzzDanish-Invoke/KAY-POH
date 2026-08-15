@@ -3,16 +3,17 @@
 
 export const packages = [
   {
-    id: "ipoh-essentials",
-    tag: "Best first visit",
-    days: "2D1N",
-    title: "Ipoh Essentials",
+    id: "kaypoh-essential",
+    tag: "Accessible as standard",
+    days: "Essential",
+    title: "KAYPOH Essential",
     color: "package-coral",
-    price: 399,
+    price: 249,
     currency: "RM",
-    description: "Old Town icons, limestone caves, local favourites, and a boutique stay—all sorted.",
-    highlights: ["Heritage walk", "Cave temple", "3 local meals", "1-night stay"],
-    includes: ["Accommodation", "Local guide", "Listed meals", "Scheduled transfers"],
+    description: "For relatively independent travellers who want a properly verified, comfortably paced Ipoh experience.",
+    highlights: ["Verified itinerary", "Accessible transport", "Group support", "Clear access guide"],
+    includes: ["Access-verified itinerary", "Prepared group companion", "Comfortable pacing", "Accessible transport"],
+    accessibility: { mobility: "Accessible as standard", pace: "Comfortable group pace", support: "Basic assistance", venue: "Verified inclusive partners" },
     itinerary: [
       { day: 1, label: "Day 1", title: "Old Town & local flavours", items: [
         { time: "10:00", activity: "Welcome to Ipoh", note: "Meet your guide at Ipoh Railway Station and drop off your bags." },
@@ -30,16 +31,17 @@ export const packages = [
     ],
   },
   {
-    id: "hungry-kay-poh",
-    tag: "Made for foodies",
+    id: "kaypoh-plus",
+    tag: "Most popular · Premium Economy",
     days: "2D1N",
-    title: "The Hungry Kay Poh",
+    title: "KAYPOH Plus",
     color: "package-gold",
-    price: 459,
+    price: 549,
     currency: "RM",
-    description: "A weekend built around the dishes, makers, and old-school shops that define Ipoh.",
-    highlights: ["Food trail", "Market visit", "Coffee workshop", "1-night stay"],
-    includes: ["Accommodation", "Local guide", "Listed meals", "Scheduled transfers"],
+    description: "Our core experience with a smaller group, more coordination, slower pacing, and personalised assistance.",
+    highlights: ["Smaller group", "More assistance", "Accessible stay", "Backup planning"],
+    includes: ["Accessible accommodation", "Dedicated trip companion", "Pre-trip coordination", "Wheelchair-ready transfers"],
+    accessibility: { mobility: "Individually reviewed", pace: "Slower and adjustable", support: "Personalised assistance", venue: "Prioritises OKU-run partners" },
     itinerary: [
       { day: 1, label: "Day 1", title: "Eat your way through Ipoh", items: [
         { time: "09:30", activity: "Old Town breakfast crawl", note: "White coffee, egg tarts, kaya toast, and local conversation." },
@@ -56,16 +58,17 @@ export const packages = [
     ],
   },
   {
-    id: "limestone-and-legacy",
-    tag: "Slow & scenic",
-    days: "3D2N",
-    title: "Limestone & Legacy",
+    id: "kaypoh-private",
+    tag: "Highest flexibility",
+    days: "Private",
+    title: "KAYPOH Private",
     color: "package-sage",
-    price: 699,
+    price: 899,
     currency: "RM",
-    description: "A deeper journey from grand heritage streets to quiet valleys and hidden temples.",
-    highlights: ["Private guide", "Countryside day", "All transfers", "2-night stay"],
-    includes: ["Accommodation", "Private local guide", "Listed meals", "All scheduled transfers"],
+    description: "For individuals, families, or small groups needing a custom itinerary and dedicated end-to-end support.",
+    highlights: ["Private group", "Custom itinerary", "Dedicated support", "Flexible timing"],
+    includes: ["Individual access plan", "Private trip companion", "Personal transport plan", "Contingency planning"],
+    accessibility: { mobility: "Planned individually", pace: "Fully flexible", support: "Dedicated support", venue: "Custom verified partners" },
     itinerary: [
       { day: 1, label: "Day 1", title: "The city and its stories", items: [
         { time: "10:00", activity: "Station welcome", note: "Private transfer, luggage drop, and an introduction to Ipoh." },
@@ -88,9 +91,9 @@ export const packages = [
 ];
 
 export const experiences = [
-  { id: "old-town-stories", number: "01", title: "Old Town Stories", description: "Murals, kopitiams, and the people behind Ipoh's storied streets.", duration: "3 hours", price: 85, currency: "RM", color: "coral" },
-  { id: "caves-and-temples", number: "02", title: "Caves & Temples", description: "Limestone hills, hidden temples, and a slower side of the city.", duration: "Half day", price: 130, currency: "RM", color: "green" },
-  { id: "taste-of-ipoh", number: "03", title: "Taste of Ipoh", description: "A delicious trail from white coffee to bean sprout chicken.", duration: "4 hours", price: 110, currency: "RM", color: "gold" },
+  { id: "old-town-stories", number: "01", title: "Old Town, Easy Pace", description: "A step-conscious route through murals, kopitiams, and Ipoh stories, with planned rest points.", duration: "3 hours", price: 85, currency: "RM", color: "coral", accessibility: "Step-free route", venue: "OKU-friendly stops" },
+  { id: "inclusive-makers", number: "02", title: "Inclusive Makers", description: "Meet craftspeople and community businesses creating meaningful work with and for OKU.", duration: "Half day", price: 130, currency: "RM", color: "green", accessibility: "Assisted access", venue: "OKU-led partners" },
+  { id: "taste-of-ipoh", number: "03", title: "Taste of Ipoh", description: "An accessible tasting trail with dietary, sensory, seating, and communication needs planned in advance.", duration: "4 hours", price: 110, currency: "RM", color: "gold", accessibility: "Frequent seating", venue: "Inclusive eateries" },
 ];
 
 export const matchingQuestions = [
@@ -98,6 +101,7 @@ export const matchingQuestions = [
   { id: "group", label: "Who’s coming?", defaultValue: "A couple", options: ["Solo traveller", "A couple", "Family", "Friends", "Corporate group"] },
   { id: "interest", label: "Your travel mood", defaultValue: "A little of everything", options: ["A little of everything", "Food, please", "Culture & heritage", "Nature & adventure", "Easy and relaxing"] },
   { id: "budget", label: "Budget per person", defaultValue: "RM300–500", options: ["Below RM300", "RM300–500", "RM500–800", "RM800+"] },
+  { id: "support", label: "Support needed", defaultValue: "Tell us during booking", options: ["Tell us during booking", "Wheelchair access", "Low-vision support", "Deaf / hard-of-hearing support", "Neurodiversity-friendly pace", "Personal care companion"] },
 ];
 
 export const dashboardMetrics = [
@@ -125,9 +129,9 @@ export const members = [
 
 export const tourGuides = [
   {
-    id: "KP-G001", name: "Mei Ling Tan", initials: "ML", title: "Heritage storyteller",
-    bio: "Ipoh-born history lover with a gift for bringing old streets and family stories to life.",
-    languages: ["English", "Mandarin", "Malay"], specialties: ["Heritage", "Food"],
+    id: "KP-G001", name: "Mei Ling Tan", initials: "ML", title: "Access-trained heritage companion",
+    bio: "Ipoh-born storyteller trained in wheelchair support, sighted guidance, and flexible route planning.",
+    languages: ["English", "Mandarin", "Malay"], specialties: ["Mobility support", "Heritage"],
     rating: 4.95, reviews: 128, tours: 214, acceptance: 96, status: "Available", color: "orange",
     licensed: true, yearsExperience: 9,
     expertise: "Heritage walking tours and street-food crawls through Old Town Ipoh.",
@@ -138,9 +142,9 @@ export const tourGuides = [
     ],
   },
   {
-    id: "KP-G002", name: "Arif Rahman", initials: "AR", title: "Nature & cave explorer",
-    bio: "Outdoor guide and amateur geologist who knows Perak’s limestone landscape inside out.",
-    languages: ["English", "Malay"], specialties: ["Nature", "Adventure"],
+    id: "KP-G002", name: "Arif Rahman", initials: "AR", title: "Accessible nature companion",
+    bio: "Outdoor guide focused on adapting Perak’s nature experiences to different mobility and energy levels.",
+    languages: ["English", "Malay"], specialties: ["Assisted mobility", "Nature"],
     rating: 4.89, reviews: 94, tours: 167, acceptance: 91, status: "On tour", color: "aqua",
     licensed: true, yearsExperience: 7,
     expertise: "Limestone cave systems and countryside trekking around Gopeng and Gunung Lang.",
@@ -150,9 +154,9 @@ export const tourGuides = [
     ],
   },
   {
-    id: "KP-G003", name: "Uncle Chan", initials: "UC", title: "Ipoh food insider",
-    bio: "Retired chef, lifelong Ipoh resident, and firm believer that every good story starts over coffee.",
-    languages: ["Cantonese", "English", "Malay"], specialties: ["Food", "Culture"],
+    id: "KP-G003", name: "Uncle Chan", initials: "UC", title: "Inclusive food companion",
+    bio: "Retired chef experienced in dietary planning, sensory-friendly food trails, and slower-paced outings.",
+    languages: ["Cantonese", "English", "Malay"], specialties: ["Sensory support", "Food"],
     rating: 4.98, reviews: 176, tours: 289, acceptance: 98, status: "Available", color: "red",
     licensed: true, yearsExperience: 15,
     expertise: "Old-school hawker trails and the stories behind Ipoh’s most-argued-over dishes.",
@@ -163,9 +167,9 @@ export const tourGuides = [
     ],
   },
   {
-    id: "KP-G004", name: "Priya Nair", initials: "PN", title: "Culture & family guide",
-    bio: "A patient, energetic guide who creates thoughtful experiences for families and young travellers.",
-    languages: ["English", "Tamil", "Malay"], specialties: ["Family", "Culture"],
+    id: "KP-G004", name: "Priya Nair", initials: "PN", title: "Family & communication companion",
+    bio: "A patient companion trained in clear communication and neurodiversity-friendly family travel.",
+    languages: ["English", "Tamil", "Malay"], specialties: ["Neurodiversity", "Family"],
     rating: 4.84, reviews: 72, tours: 121, acceptance: 88, status: "Off duty", color: "blue",
     licensed: true, yearsExperience: 6,
     expertise: "Family-paced culture walks and gentle sightseeing for travellers with young children.",
@@ -177,11 +181,11 @@ export const tourGuides = [
 ];
 
 export const guideBookingRequests = [
-  { id: "KP-B2048", member: "Alicia Tan", packageId: "ipoh-essentials", packageName: "Ipoh Essentials", guideId: "KP-G001", guide: "Mei Ling Tan", date: "22–23 Aug 2026", guests: 2, value: 798, status: "Pending" },
-  { id: "KP-B2047", member: "Marcus Lee", packageId: "limestone-and-legacy", packageName: "Limestone & Legacy", guideId: "KP-G002", guide: "Arif Rahman", date: "25–27 Aug 2026", guests: 2, value: 1398, status: "Pending" },
-  { id: "KP-B2046", member: "Nur Aisyah", packageId: "hungry-kay-poh", packageName: "The Hungry Kay Poh", guideId: "KP-G003", guide: "Uncle Chan", date: "19–20 Aug 2026", guests: 4, value: 1836, status: "Accepted" },
-  { id: "KP-B2045", member: "Daniel Wong", packageId: "ipoh-essentials", packageName: "Ipoh Essentials", guideId: "KP-G001", guide: "Mei Ling Tan", date: "17–18 Aug 2026", guests: 2, value: 798, status: "Accepted" },
-  { id: "KP-B2044", member: "James Carter", packageId: "hungry-kay-poh", packageName: "The Hungry Kay Poh", guideId: "KP-G004", guide: "Priya Nair", date: "12–13 Aug 2026", guests: 1, value: 459, status: "Completed" },
+  { id: "KP-B2048", member: "Alicia Tan", packageId: "kaypoh-essential", packageName: "KAYPOH Essential", guideId: "KP-G001", guide: "Mei Ling Tan", date: "22–23 Aug 2026", guests: 2, value: 498, status: "Pending" },
+  { id: "KP-B2047", member: "Marcus Lee", packageId: "kaypoh-private", packageName: "KAYPOH Private", guideId: "KP-G002", guide: "Arif Rahman", date: "25–27 Aug 2026", guests: 2, value: 1798, status: "Pending" },
+  { id: "KP-B2046", member: "Nur Aisyah", packageId: "kaypoh-plus", packageName: "KAYPOH Plus", guideId: "KP-G003", guide: "Uncle Chan", date: "19–20 Aug 2026", guests: 4, value: 2196, status: "Accepted" },
+  { id: "KP-B2045", member: "Daniel Wong", packageId: "kaypoh-essential", packageName: "KAYPOH Essential", guideId: "KP-G001", guide: "Mei Ling Tan", date: "17–18 Aug 2026", guests: 2, value: 498, status: "Accepted" },
+  { id: "KP-B2044", member: "James Carter", packageId: "kaypoh-plus", packageName: "KAYPOH Plus", guideId: "KP-G004", guide: "Priya Nair", date: "12–13 Aug 2026", guests: 1, value: 549, status: "Completed" },
 ];
 
 export const bookingAddOns = [
@@ -189,4 +193,50 @@ export const bookingAddOns = [
   { id: "private-tour", name: "Make it private", description: "Keep the guide exclusively for your group", price: 120, appliesTo: ["experience"] },
   { id: "food-upgrade", name: "Extra food stops", description: "Two additional guide-picked tastings", price: 45, appliesTo: ["package", "experience"] },
   { id: "late-checkout", name: "Late checkout", description: "Keep your room until 4pm on departure day", price: 80, appliesTo: ["package"] },
+];
+
+export const accessibilityNeeds = [
+  "Wheelchair or mobility access",
+  "Step-free route only",
+  "Low-vision guidance",
+  "Deaf or hard-of-hearing support",
+  "Neurodiversity-friendly pace",
+  "Frequent seating and rest stops",
+  "Personal care companion space",
+  "Dietary or allergy planning",
+];
+
+export const liveTours = [
+  {
+    id: "tour-aug-1501", bookingId: "KP-B2051", title: "KAYPOH Plus · Ipoh", date: "15 Aug 2026", time: "08:30–18:30", status: "Live",
+    guideId: "KP-G001", guide: "Mei Ling Tan", guests: 8, vehicle: "Accessible Van A", progress: 42,
+    modules: [
+      { id: "welcome-breakfast", time: "08:30", title: "Welcome & accessible breakfast", venue: "Kedai Kopi Kinta", status: "Completed", responses: 8, average: 4.8, ratings: [0,0,0,2,6] },
+      { id: "old-town-route", time: "10:00", title: "Step-free Old Town route", venue: "Ipoh Old Town", status: "Rating open", responses: 5, average: 4.4, ratings: [0,0,1,1,3] },
+      { id: "inclusive-lunch", time: "12:30", title: "Inclusive community lunch", venue: "Dapur Muafakat", status: "Next", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "makers-workshop", time: "14:30", title: "OKU makers workshop", venue: "Kinta Inclusive Studio", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "evening-reflection", time: "17:00", title: "Coffee & trip reflection", venue: "Access Café Ipoh", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+    ],
+  },
+  {
+    id: "tour-aug-1502", bookingId: "KP-B2052", title: "Old Town, Easy Pace", date: "15 Aug 2026", time: "14:00–17:00", status: "Starting soon",
+    guideId: "KP-G004", guide: "Priya Nair", guests: 5, vehicle: "Accessible Van B", progress: 0,
+    modules: [
+      { id: "easy-pace-briefing", time: "14:00", title: "Access briefing & introductions", venue: "Ipoh Railway Station", status: "Next", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "easy-pace-walk", time: "14:30", title: "Easy-pace heritage route", venue: "Ipoh Old Town", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "easy-pace-coffee", time: "16:15", title: "Accessible coffee stop", venue: "Access Café Ipoh", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+    ],
+  },
+];
+
+export const liveRatingResponses = [
+  { id: "R-1001", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Comfortable pace", "Easy to access", "Helpful companion"], comment: "The van pickup and breakfast seating were both very easy for my wheelchair.", submittedAt: "09:42", anonymous: true },
+  { id: "R-1002", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Helpful companion", "Enjoyable activity"], comment: "Mei Ling explained the day clearly and checked what support I preferred.", submittedAt: "09:44", anonymous: true },
+  { id: "R-1003", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 4, tags: ["Good rest facilities"], comment: "Accessible toilet was useful. A little more space between tables would help.", submittedAt: "09:45", anonymous: true },
+  { id: "R-1004", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Comfortable pace", "Enjoyable activity"], comment: "", submittedAt: "09:47", anonymous: true },
+  { id: "R-1005", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Easy to access", "Helpful companion"], comment: "The alternative ramp route worked well and never felt like a lesser experience.", submittedAt: "11:51", anonymous: true },
+  { id: "R-1006", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 4, tags: ["Comfortable pace", "Good rest facilities"], comment: "Would appreciate one more shaded rest point near Concubine Lane.", submittedAt: "11:53", anonymous: true },
+  { id: "R-1007", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 3, tags: ["Needs improvement"], comment: "One pavement section was quite uneven for my walking frame.", submittedAt: "11:55", anonymous: true },
+  { id: "R-1008", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Enjoyable activity", "Helpful companion"], comment: "Loved the stories and the group size was just right.", submittedAt: "11:58", anonymous: true },
+  { id: "R-1009", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Easy to access"], comment: "", submittedAt: "12:01", anonymous: true },
 ];

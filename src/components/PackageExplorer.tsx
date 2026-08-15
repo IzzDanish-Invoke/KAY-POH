@@ -23,7 +23,7 @@ export default function PackageExplorer() {
         {packages.map((item) => (
           <article className={`package-card ${item.color}`} id={item.id} key={item.title}>
             <div className="package-visual"><span className="package-tag">{item.tag}</span><strong>{item.days}</strong><div className="package-landscape"><i /><i /><i /></div></div>
-            <div className="package-body"><p className="package-kicker">Curated getaway</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map((highlight) => <li key={highlight}>✓ {highlight}</li>)}</ul><div className="package-price"><span>From <strong>{item.currency}{item.price}</strong> / person</span><button onClick={() => setSelected(item)}>View itinerary ↗</button></div></div>
+            <div className="package-body"><p className="package-kicker">OKU-first getaway</p><h3>{item.title}</h3><p>{item.description}</p><div className="package-access">♿ {item.accessibility.mobility} · {item.accessibility.pace}</div><ul>{item.highlights.map((highlight) => <li key={highlight}>✓ {highlight}</li>)}</ul><div className="package-price"><span>From <strong>{item.currency}{item.price}</strong> / person</span><button onClick={() => setSelected(item)}>View itinerary ↗</button></div></div>
           </article>
         ))}
       </div>
@@ -35,7 +35,7 @@ export default function PackageExplorer() {
               <div><p className="eyebrow"><span /> {selected.days} curated getaway</p><h2 id="itinerary-title">{selected.title}</h2></div>
               <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close itinerary">×</button>
             </header>
-            <div className="modal-summary"><p>{selected.description}</p><div><small>Starting from</small><strong>{selected.currency}{selected.price}</strong><span>per person</span></div></div>
+            <div className="modal-summary"><div><p>{selected.description}</p><div className="modal-access"><span>♿ {selected.accessibility.mobility}</span><span>◷ {selected.accessibility.pace}</span><span>♥ {selected.accessibility.support}</span><span>◎ {selected.accessibility.venue}</span></div></div><div><small>Starting from</small><strong>{selected.currency}{selected.price}</strong><span>per person</span></div></div>
             <div className="itinerary-days">
               {selected.itinerary.map((day) => (
                 <article className="itinerary-day" key={day.day}>

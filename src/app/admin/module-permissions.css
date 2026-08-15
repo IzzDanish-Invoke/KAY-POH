@@ -1,0 +1,4 @@
+.live-role-guide .module-next .module-actions,
+.live-role-guide .module-upcoming .module-actions {
+  display: none;
+}
