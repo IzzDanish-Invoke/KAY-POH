@@ -1,95 +1,5 @@
 [
   {
-    "id": "kaypoh-essential",
-    "tag": "Accessible as standard",
-    "days": "Essential",
-    "title": "KAYPOH Essential",
-    "color": "package-coral",
-    "price": 249,
-    "currency": "RM",
-    "description": "For relatively independent travellers who want a properly verified, comfortably paced Ipoh experience.",
-    "highlights": [
-      "Verified itinerary",
-      "Accessible transport",
-      "Group support",
-      "Clear access guide"
-    ],
-    "includes": [
-      "Access-verified itinerary",
-      "Prepared group companion",
-      "Comfortable pacing",
-      "Accessible transport"
-    ],
-    "accessibility": {
-      "mobility": "Accessible as standard",
-      "pace": "Comfortable group pace",
-      "support": "Basic assistance",
-      "venue": "Verified inclusive partners"
-    },
-    "itinerary": [
-      {
-        "day": 1,
-        "label": "Day 1",
-        "title": "Old Town & local flavours",
-        "items": [
-          {
-            "time": "10:00",
-            "activity": "Welcome to Ipoh",
-            "note": "Meet your guide at Ipoh Railway Station and drop off your bags."
-          },
-          {
-            "time": "10:30",
-            "activity": "Heritage & mural walk",
-            "note": "Explore Concubine Lane, Market Lane, and the stories behind Old Town."
-          },
-          {
-            "time": "12:30",
-            "activity": "Classic Ipoh lunch",
-            "note": "A local favourite, selected around your dietary needs."
-          },
-          {
-            "time": "14:00",
-            "activity": "Check-in & free time",
-            "note": "Settle into your centrally located boutique hotel."
-          },
-          {
-            "time": "17:00",
-            "activity": "New Town food trail",
-            "note": "Taste famous street snacks and finish with an easy local dinner."
-          }
-        ]
-      },
-      {
-        "day": 2,
-        "label": "Day 2",
-        "title": "Limestone & white coffee",
-        "items": [
-          {
-            "time": "08:00",
-            "activity": "Kopitiam breakfast",
-            "note": "White coffee, kaya toast, and a proper Ipoh morning."
-          },
-          {
-            "time": "09:30",
-            "activity": "Sam Poh Tong temple",
-            "note": "Visit Ipoh’s dramatic limestone cave temple and gardens."
-          },
-          {
-            "time": "11:30",
-            "activity": "Local product stop",
-            "note": "Pick up pomelo, biscuits, or coffee before departure."
-          },
-          {
-            "time": "13:00",
-            "activity": "Trip concludes",
-            "note": "Drop-off at the station or city centre."
-          }
-        ]
-      }
-    ],
-    "published": true
-  },
-  {
     "id": "kaypoh-plus",
     "tag": "Most popular · Premium Economy",
     "days": "2D1N",
@@ -274,6 +184,26 @@
         ]
       }
     ],
+    "published": true
+  },
+  {
+    "id": "untitled-package",
+    "tag": "New accessible package",
+    "days": "2D1N",
+    "title": "Untitled package",
+    "color": "package-gold",
+    "price": 0,
+    "currency": "RM",
+    "description": "",
+    "highlights": [],
+    "includes": [],
+    "accessibility": {
+      "mobility": "",
+      "pace": "",
+      "support": "",
+      "venue": ""
+    },
+    "itinerary": [],
     "published": true
   }
 ]
