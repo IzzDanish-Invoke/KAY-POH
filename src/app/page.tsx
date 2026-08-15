@@ -3,7 +3,6 @@ import Image from "next/image";
 import PackageExplorer from "@/components/PackageExplorer";
 import MatchForm from "@/components/MatchForm";
 import TourGuides from "@/components/TourGuides";
-import { experiences } from "@/data/data";
 
 function ArrowIcon() {
   return (
@@ -39,7 +38,6 @@ export default function Home() {
           </a>
           <div className="nav-links">
             <a href="#packages">Packages</a>
-            <a href="#experiences">Experiences</a>
             <a href="#guides">Guides</a>
             <a href="#about">Our story</a>
           </div>
@@ -71,9 +69,6 @@ export default function Home() {
             <div className="hero-actions">
               <a className="button primary" href="#packages">
                 Choose your support <ArrowIcon />
-              </a>
-              <a className="text-link" href="#experiences">
-                Just here for the day? <span>↘</span>
               </a>
             </div>
             <div className="hero-trust">
@@ -137,46 +132,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="access-promise shell">
-        <div className="access-heading">
-          <p className="eyebrow">
-            <span /> Our OKU-first promise
-          </p>
-          <h2>
-            Support at every
-            <br />
-            <em>part of the journey.</em>
-          </h2>
-        </div>
-        <div className="access-grid">
-          <article>
-            <span>01</span>
-            <h3>Access before arrival</h3>
-            <p>
-              We check routes, entrances, toilets, seating, transport, and
-              accommodation—not just whether a venue uses the word “accessible.”
-            </p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>People, not assumptions</h3>
-            <p>
-              Tell us the support you want. Your pace, communication needs,
-              mobility, sensory needs, and companion arrangements shape the
-              itinerary.
-            </p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Inclusive local impact</h3>
-            <p>
-              We prioritise OKU-run businesses and inclusive employers, and
-              label every partner clearly so you know who your trip supports.
-            </p>
-          </article>
-        </div>
-      </section>
-
       <section className="packages shell" id="packages">
         <div className="section-heading">
           <div>
@@ -210,105 +165,6 @@ export default function Home() {
           <a className="button outline" href="#contact">
             Build my own trip <ArrowIcon />
           </a>
-        </div>
-      </section>
-
-      <section className="positioning">
-        <div className="shell positioning-inner">
-          <div className="positioning-heading">
-            <p className="eyebrow light">
-              <span /> The Premium Economy mindset
-            </p>
-            <h2>
-              We spend on what
-              <br />
-              <em>actually helps.</em>
-            </h2>
-            <p>
-              A reasonable premium for preparation, access, comfort, and peace
-              of mind—not marble lobbies or luxury extras.
-            </p>
-          </div>
-          <div className="compare-grid">
-            <article>
-              <small>STANDARD TOUR</small>
-              <h3>Traveller adapts</h3>
-              <ul>
-                <li>Large groups</li>
-                <li>Fixed, faster itinerary</li>
-                <li>Limited access planning</li>
-                <li>Lowest possible price</li>
-              </ul>
-            </article>
-            <article className="featured">
-              <span>OUR DIFFERENCE</span>
-              <small>KAYPOH · PREMIUM ECONOMY</small>
-              <h3>Journey adapts</h3>
-              <ul>
-                <li>Manageable groups</li>
-                <li>Verified access</li>
-                <li>Advance coordination</li>
-                <li>Support and backup plans</li>
-              </ul>
-            </article>
-            <article>
-              <small>LUXURY / VIP</small>
-              <h3>Luxury extras</h3>
-              <ul>
-                <li>Private concierge</li>
-                <li>Luxury accommodation</li>
-                <li>Premium extras</li>
-                <li>Very high price</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="tours shell" id="experiences">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">
-              <span /> Only have a few hours?
-            </p>
-            <h2>
-              Small tours.
-              <br />
-              <em>Big Ipoh energy.</em>
-            </h2>
-          </div>
-          <p>
-            Shorter access-checked activities for day visitors. Each one shows
-            its mobility profile, pace, and whether stops are OKU-friendly or
-            OKU-led.
-          </p>
-        </div>
-        <div className="tour-grid">
-          {experiences.map((tour) => (
-            <article className={`tour-card ${tour.color}`} key={tour.id}>
-              <div className="card-top">
-                <span>{tour.number}</span>
-                <span className="mini-arrow">↗</span>
-              </div>
-              <div className="card-pattern" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </div>
-              <div className="access-label">
-                ♿ {tour.accessibility} · {tour.venue}
-              </div>
-              <h3>{tour.title}</h3>
-              <p>{tour.description}</p>
-              <footer>
-                <span>
-                  {tour.duration} · From {tour.currency}
-                  {tour.price}
-                </span>
-                <Link href="/booking">Book ↗</Link>
-              </footer>
-            </article>
-          ))}
         </div>
       </section>
 
@@ -352,6 +208,46 @@ export default function Home() {
               </p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section className="access-promise shell">
+        <div className="access-heading">
+          <p className="eyebrow">
+            <span /> Our OKU-first promise
+          </p>
+          <h2>
+            Support at every
+            <br />
+            <em>part of the journey.</em>
+          </h2>
+        </div>
+        <div className="access-grid">
+          <article>
+            <span>01</span>
+            <h3>Access before arrival</h3>
+            <p>
+              We check routes, entrances, toilets, seating, transport, and
+              accommodation—not just whether a venue uses the word “accessible.”
+            </p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>People, not assumptions</h3>
+            <p>
+              Tell us the support you want. Your pace, communication needs,
+              mobility, sensory needs, and companion arrangements shape the
+              itinerary.
+            </p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Inclusive local impact</h3>
+            <p>
+              We prioritise OKU-run businesses and inclusive employers, and
+              label every partner clearly so you know who your trip supports.
+            </p>
+          </article>
         </div>
       </section>
 
