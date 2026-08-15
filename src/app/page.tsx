@@ -132,7 +132,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="packages shell" id="packages">
+      <section className="packages" id="packages">
+        <div className="shell">
         <div className="section-heading">
           <div>
             <p className="eyebrow">
@@ -165,6 +166,7 @@ export default function Home() {
           <a className="button outline" href="#contact">
             Build my own trip <ArrowIcon />
           </a>
+        </div>
         </div>
       </section>
 
@@ -211,7 +213,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="access-promise shell">
+      <section className="access-promise">
+        <div className="shell">
         <div className="access-heading">
           <p className="eyebrow">
             <span /> Our OKU-first promise
@@ -249,6 +252,7 @@ export default function Home() {
             </p>
           </article>
         </div>
+        </div>
       </section>
 
       <section className="story" id="about">
@@ -272,7 +276,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="contact shell" id="contact">
+      <section className="contact" id="contact">
+        <div className="shell">
         <p className="eyebrow">
           <span /> Your Ipoh story starts here
         </p>
@@ -295,6 +300,7 @@ export default function Home() {
           <span>Local trips · Ipoh, Perak</span>
           <span>hello@kaypoh.tours</span>
         </footer>
+        </div>
       </section>
     </main>
   );

@@ -14,7 +14,8 @@ export default function TourGuides() {
   const tourGuides = useTourGuides();
 
   return (
-    <section className="guides shell" id="guides">
+    <section className="guides" id="guides">
+      <div className="shell">
       <div className="section-heading">
         <div>
           <p className="eyebrow"><span /> Meet the people</p>
@@ -83,6 +84,7 @@ export default function TourGuides() {
             </article>
           );
         })}
+      </div>
       </div>
     </section>
   );

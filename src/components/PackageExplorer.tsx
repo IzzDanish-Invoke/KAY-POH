@@ -30,7 +30,7 @@ export default function PackageExplorer() {
 
       {selected && (
         <div className="modal-backdrop" role="presentation" onMouseDown={() => setSelected(null)}>
-          <section className="itinerary-modal" role="dialog" aria-modal="true" aria-labelledby="itinerary-title" onMouseDown={(event) => event.stopPropagation()}>
+          <section className={`itinerary-modal ${selected.color}-theme`} role="dialog" aria-modal="true" aria-labelledby="itinerary-title" onMouseDown={(event) => event.stopPropagation()}>
             <header className="modal-header">
               <div><p className="eyebrow"><span /> {selected.days} Ipoh package</p><h2 id="itinerary-title">{selected.title}</h2></div>
               <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close itinerary">×</button>
