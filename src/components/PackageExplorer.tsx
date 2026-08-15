@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePackages } from "@/hooks/usePackages";
 import type { TourPackage } from "@/types/tour-package";
 
@@ -50,7 +49,7 @@ export default function PackageExplorer() {
             </div>}
             <div className="modal-package-details"><section><h3>Package includes</h3><ul>{selected.includes.map((item) => <li key={item}>✓ {item}</li>)}</ul></section><section><h3>Not included</h3><ul>{selected.notIncluded.map((item) => <li key={item}>× {item}</li>)}</ul></section></div>
             {selected.notices.length > 0 && <div className="modal-notices">{selected.notices.map((notice) => <p key={notice}>ⓘ {notice}</p>)}</div>}
-            <footer className="modal-footer"><p><strong>Ready to plan your trip?</strong><span>Your final itinerary and any additional costs are confirmed before booking.</span></p><Link className="button primary" href="/booking">Book this trip <span>→</span></Link></footer>
+            <footer className="modal-footer"><p><strong>Ready to plan your trip?</strong><span>Your final itinerary and any additional costs are confirmed before booking.</span></p><a className="button primary" href="#match" onClick={() => { window.dispatchEvent(new CustomEvent("kaypoh-select-package", { detail: selected.id })); setSelected(null); }}>Book this trip <span>→</span></a></footer>
           </section>
         </div>
       )}

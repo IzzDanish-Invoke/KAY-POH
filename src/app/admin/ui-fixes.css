@@ -6,6 +6,53 @@
   box-sizing: border-box;
 }
 
+.module-actions button.view-module-reviews {
+  background: var(--orange);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.insight-review-link {
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.insight-review-link:hover {
+  background: #fff8e8;
+  box-shadow: inset 3px 0 var(--red);
+}
+
+.live-day-tabs {
+  display: flex;
+  gap: 8px;
+  margin: -5px 0 16px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: #eee9dc;
+}
+
+.live-day-tabs button {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 3px 14px;
+  min-width: 175px;
+  padding: 10px 14px;
+  border: 1px solid #c8c1b3;
+  background: #fffdf8;
+  color: var(--ink);
+  text-align: left;
+}
+
+.live-day-tabs button.active {
+  border-color: var(--ink);
+  background: var(--orange);
+  box-shadow: 3px 3px 0 var(--red);
+}
+
+.live-day-tabs strong { font: 400 15px Georgia, serif; }
+.live-day-tabs span,.live-day-tabs small { font-size: 8px; }
+.live-day-tabs small { grid-column: 1 / -1; color: #667771; }
+
 .admin-shell button,
 .admin-shell input,
 .admin-shell select,

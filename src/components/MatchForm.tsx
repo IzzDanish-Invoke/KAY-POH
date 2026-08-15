@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   matchingQuestions,
   packages as initialPackages,
@@ -8,6 +8,7 @@ import {
 } from "@/data/data";
 import { usePackages } from "@/hooks/usePackages";
 import { useTourGuides } from "@/hooks/useTourGuides";
+import type { Booking } from "@/types/booking";
 
 function ArrowIcon() {
   return (
@@ -40,7 +41,7 @@ const DISABILITY_TYPES = [
   "Other",
 ];
 
-const MIN_GROUP_SIZE = 20;
+const MIN_GROUP_SIZE = 10;
 
 const DEFAULT_PLAN_ID =
   initialPackages.find((pkg) => pkg.tag === "Best first visit")?.id ??
@@ -93,12 +94,23 @@ export default function MatchForm() {
   const [selectedPlanId, setSelectedPlanId] = useState(DEFAULT_PLAN_ID);
   const [selectedGuideId, setSelectedGuideId] = useState(DEFAULT_GUIDE_ID);
   const [showBookingDetails, setShowBookingDetails] = useState(false);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [bookingConfirmed, setBookingConfirmed] = useState<Booking | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+
+  useEffect(() => {
+    const selectPackage = (event: Event) => { const packageId = (event as CustomEvent<string>).detail; if (packageId) setSelectedPlanId(packageId); };
+    window.addEventListener("kaypoh-select-package", selectPackage);
+    return () => window.removeEventListener("kaypoh-select-package", selectPackage);
+  }, []);
 
   const selectTravellerType = (type: TravellerType) => {
     setTravellerType(type);
     setShowBookingDetails(false);
-    setBookingConfirmed(false);
+    setBookingConfirmed(null);
+    const packageId = type === "tourist" ? "kaypoh-normal" : type === "disabled-person" ? "kaypoh-oku" : "kaypoh-oku-group";
+    if (packages.some((item) => item.id === packageId)) setSelectedPlanId(packageId);
   };
 
   const addParticipant = () =>
@@ -122,9 +134,25 @@ export default function MatchForm() {
 
   const handleContinue = () => setShowBookingDetails(true);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setBookingConfirmed(true);
+    const form = new FormData(event.currentTarget);
+    const selectedPackage = packages.find((item) => item.id === selectedPlanId);
+    const selectedGuide = tourGuides.find((item) => item.id === selectedGuideId);
+    if (!selectedPackage || !selectedGuide || !startDate) { setBookingError("Please choose a package, guide, and preferred date."); return; }
+    const groupPreference = String(form.get("group") ?? "");
+    const guestCount = travellerType === "disabled-group" ? participants.length : travellerType === "disabled-person" ? (buddyOption === "with" ? 2 : 1) : ({ "Solo traveller": 1, "A couple": 2, Family: 4, Friends: 4, "Corporate group": 10 }[groupPreference] ?? 1);
+    const lead = travellerType === "disabled-group" ? { name: `${participants[0]?.firstName ?? ""} ${participants[0]?.lastName ?? ""}`.trim(), email: participants[0]?.email ?? "", contact: `${participants[0]?.countryCode ?? ""} ${participants[0]?.contact ?? ""}`.trim() } : { name: `${form.get("firstName") ?? ""} ${form.get("lastName") ?? ""}`.trim(), email: String(form.get("email") ?? ""), contact: `${form.get("countryCode") ?? ""} ${form.get("contact") ?? ""}`.trim() };
+    const preferredRate = selectedPackage.rates.find((rate) => travellerType === "disabled-person" ? rate.label.includes("OKU Final") : travellerType === "disabled-group" ? rate.label === "Local" : rate.label === "Local Traveller") ?? selectedPackage.rates[0];
+    const preferences = Object.fromEntries(matchingQuestions.map((question) => [question.id, String(form.get(question.id) ?? question.defaultValue)]));
+    const supportNeeds = travellerType === "tourist" ? [] : travellerType === "disabled-person" ? [disabilityType, buddyOption === "with" ? "Travelling with a buddy" : "Travelling without a buddy"] : [...new Set(participants.map((item) => groupDisabilityMode === "same" ? groupDisabilityType : item.disabilityType))];
+    setSubmitting(true); setBookingError("");
+    try {
+      const response = await fetch("/api/bookings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ member: lead.name, email: lead.email, contact: lead.contact, identityDocument: travellerType === "disabled-group" ? participants[0]?.icNumber : String(form.get("icNumber") ?? ""), packageId: selectedPackage.id, packageName: selectedPackage.title, guideId: selectedGuide.id, guide: selectedGuide.name, startDate, guests: guestCount, value: (preferredRate?.price ?? selectedPackage.price) * guestCount, rateLabel: preferredRate?.label ?? "Standard rate", addOns: [], supportNeeds, supportNotes: `Landing-page match: ${Object.values(preferences).join(" · ")}`, travellerType, preferences, participants: travellerType === "disabled-group" ? participants.map((item) => ({ name: `${item.firstName} ${item.lastName}`.trim(), email: item.email, contact: `${item.countryCode} ${item.contact}`.trim(), identityDocument: item.icNumber, disabilityType: groupDisabilityMode === "same" ? groupDisabilityType : item.disabilityType })) : [] }) });
+      const result = await response.json() as Booking | { error?: string };
+      if (!response.ok) throw new Error("error" in result ? result.error : "Unable to create booking.");
+      setBookingConfirmed(result as Booking);
+    } catch (error) { setBookingError(error instanceof Error ? error.message : "Unable to create booking."); } finally { setSubmitting(false); }
   };
 
   return (
@@ -243,6 +271,13 @@ export default function MatchForm() {
         <button type="button" className="match-button" onClick={handleContinue}>
           Continue with booking <ArrowIcon />
         </button>
+      )}
+
+      {showBookingDetails && !bookingConfirmed && (
+        <div className="booking-details">
+          <span className="field-label">Trip date</span>
+          <div className="booking-details-grid"><label>Preferred start date<input required type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label></div>
+        </div>
       )}
 
       {showBookingDetails &&
@@ -448,9 +483,9 @@ export default function MatchForm() {
             <button
               className="match-button"
               type="submit"
-              disabled={groupIsBelowMinimum}
+              disabled={groupIsBelowMinimum || submitting || !startDate}
             >
-              Proceed to payment <ArrowIcon />
+              {submitting ? "Sending request…" : "Request booking"} <ArrowIcon />
             </button>
           </div>
         )}
@@ -505,8 +540,8 @@ export default function MatchForm() {
                 </div>
               </label>
             </div>
-            <button className="match-button" type="submit">
-              Proceed to payment <ArrowIcon />
+            <button className="match-button" type="submit" disabled={submitting || !startDate}>
+              {submitting ? "Sending request…" : "Request booking"} <ArrowIcon />
             </button>
           </div>
         )}
@@ -514,9 +549,10 @@ export default function MatchForm() {
       {bookingConfirmed && (
         <div className="booking-confirmed">
           <strong>✓ Booking request received.</strong>
-          <span>We&apos;ll be in touch shortly to confirm your trip.</span>
+          <span>Reference {bookingConfirmed.id}. {bookingConfirmed.guide} will review your request, and an accepted trip will appear automatically in upcoming tours.</span>
         </div>
       )}
+      {bookingError && <div className="booking-confirmed" role="alert"><strong>We couldn&apos;t send this request.</strong><span>{bookingError}</span></div>}
     </form>
   );
 }

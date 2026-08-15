@@ -45,9 +45,9 @@ export default function Home() {
             <Link className="login-link" href="/login">
               <span className="login-icon">↳</span> Login
             </Link>
-            <Link className="nav-cta" href="/booking">
+            <a className="nav-cta" href="#match">
               Book now
-            </Link>
+            </a>
           </div>
         </nav>
 

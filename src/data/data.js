@@ -2,6 +2,10 @@
 // Keep database-shaped content here until a real API/database is connected.
 import tourGuideRecords from "./tour-guides.json";
 import packageRecords from "./packages.json";
+import memberRecords from "./members.json";
+import liveTourRecords from "./live-tours.json";
+import ratingResponseRecords from "./rating-responses.json";
+import bookingRecords from "./bookings.json";
 
 /* Package records now live in packages.json and are updated through /api/packages. */
 export const packages = packageRecords;
@@ -122,24 +126,9 @@ export const monthlyBookings = [
   { month: "Jul", bookings: 132, revenue: 22300 }, { month: "Aug", bookings: 148, revenue: 24580 },
 ];
 
-export const members = [
-  { id: "KP-M1024", name: "Alicia Tan", email: "alicia.tan@example.com", joined: "12 Aug 2026", bookings: 3, spent: 1287, status: "Active", initials: "AT" },
-  { id: "KP-M1023", name: "Marcus Lee", email: "marcus.lee@example.com", joined: "10 Aug 2026", bookings: 1, spent: 699, status: "Active", initials: "ML" },
-  { id: "KP-M1022", name: "Nur Aisyah", email: "aisyah@example.com", joined: "08 Aug 2026", bookings: 4, spent: 1840, status: "Active", initials: "NA" },
-  { id: "KP-M1021", name: "Daniel Wong", email: "daniel.w@example.com", joined: "02 Aug 2026", bookings: 2, spent: 858, status: "Active", initials: "DW" },
-  { id: "KP-M1020", name: "Siti Hajar", email: "siti.hajar@example.com", joined: "29 Jul 2026", bookings: 0, spent: 0, status: "New", initials: "SH" },
-  { id: "KP-M1019", name: "James Carter", email: "j.carter@example.com", joined: "24 Jul 2026", bookings: 1, spent: 459, status: "Inactive", initials: "JC" },
-];
-
 export const tourGuides = tourGuideRecords;
 
-export const guideBookingRequests = [
-  { id: "KP-B2048", member: "Alicia Tan", packageId: "kaypoh-essential", packageName: "KAYPOH Essential", guideId: "KP-G001", guide: "Mei Ling Tan", date: "22–23 Aug 2026", guests: 2, value: 498, status: "Pending" },
-  { id: "KP-B2047", member: "Marcus Lee", packageId: "kaypoh-private", packageName: "KAYPOH Private", guideId: "KP-G002", guide: "Arif Rahman", date: "25–27 Aug 2026", guests: 2, value: 1798, status: "Pending" },
-  { id: "KP-B2046", member: "Nur Aisyah", packageId: "kaypoh-plus", packageName: "KAYPOH Plus", guideId: "KP-G003", guide: "Uncle Chan", date: "19–20 Aug 2026", guests: 4, value: 2196, status: "Accepted" },
-  { id: "KP-B2045", member: "Daniel Wong", packageId: "kaypoh-essential", packageName: "KAYPOH Essential", guideId: "KP-G001", guide: "Mei Ling Tan", date: "17–18 Aug 2026", guests: 2, value: 498, status: "Accepted" },
-  { id: "KP-B2044", member: "James Carter", packageId: "kaypoh-plus", packageName: "KAYPOH Plus", guideId: "KP-G004", guide: "Priya Nair", date: "12–13 Aug 2026", guests: 1, value: 549, status: "Completed" },
-];
+export const guideBookingRequests = bookingRecords;
 
 export const bookingAddOns = [
   { id: "station-pickup", name: "Station pickup", description: "Private pickup from Ipoh Railway Station", price: 35, appliesTo: ["package", "experience"] },
@@ -159,7 +148,7 @@ export const accessibilityNeeds = [
   "Dietary or allergy planning",
 ];
 
-export const liveTours = [
+const legacyLiveTours = [
   {
     id: "tour-aug-1501", bookingId: "KP-B2051", title: "KAYPOH Plus · Ipoh", date: "15 Aug 2026", time: "08:30–18:30", status: "Live",
     guideId: "KP-G001", guide: "Mei Ling Tan", guests: 8, vehicle: "Accessible Van A", progress: 42,
@@ -182,7 +171,7 @@ export const liveTours = [
   },
 ];
 
-export const liveRatingResponses = [
+const legacyLiveRatingResponses = [
   { id: "R-1001", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Comfortable pace", "Easy to access", "Helpful companion"], comment: "The van pickup and breakfast seating were both very easy for my wheelchair.", submittedAt: "09:42", anonymous: true },
   { id: "R-1002", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Helpful companion", "Enjoyable activity"], comment: "Mei Ling explained the day clearly and checked what support I preferred.", submittedAt: "09:44", anonymous: true },
   { id: "R-1003", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 4, tags: ["Good rest facilities"], comment: "Accessible toilet was useful. A little more space between tables would help.", submittedAt: "09:45", anonymous: true },
@@ -193,3 +182,10 @@ export const liveRatingResponses = [
   { id: "R-1008", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Enjoyable activity", "Helpful companion"], comment: "Loved the stories and the group size was just right.", submittedAt: "11:58", anonymous: true },
   { id: "R-1009", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Easy to access"], comment: "", submittedAt: "12:01", anonymous: true },
 ];
+
+// Mutable operational records live in JSON and are updated through their APIs.
+export const members = memberRecords;
+export const liveTours = liveTourRecords;
+export const liveRatingResponses = ratingResponseRecords;
+void legacyLiveTours;
+void legacyLiveRatingResponses;

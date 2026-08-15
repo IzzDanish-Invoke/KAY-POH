@@ -6,6 +6,7 @@ import { useState } from "react";
 import { accessibilityNeeds, bookingAddOns, experiences, packages as initialPackages, tourGuides as initialTourGuides } from "@/data/data";
 import { usePackages } from "@/hooks/usePackages";
 import { useTourGuides } from "@/hooks/useTourGuides";
+import type { Booking } from "@/types/booking";
 
 type BookingType = "package" | "experience";
 
@@ -21,7 +22,11 @@ export default function BookingFlow() {
   const [addOns, setAddOns] = useState<string[]>([]);
   const [supportNeeds, setSupportNeeds] = useState<string[]>([]);
   const [supportNotes, setSupportNotes] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [travellerName, setTravellerName] = useState("");
+  const [travellerEmail, setTravellerEmail] = useState("");
+  const [submitted, setSubmitted] = useState<Booking | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const products = type === "package" ? packages : experiences;
   const selected = products.find((item) => item.id === productId) ?? products[0];
@@ -35,14 +40,25 @@ export default function BookingFlow() {
   const total = subtotal + addOnTotal;
 
   const switchType = (next: BookingType) => {
-    setType(next); setProductId(next === "package" ? (packages[0]?.id ?? initialPackages[0].id) : experiences[0].id); setRateLabel(""); setGuests(2); setAddOns([]); setSubmitted(false);
+    setType(next); setProductId(next === "package" ? (packages[0]?.id ?? initialPackages[0].id) : experiences[0].id); setRateLabel(""); setGuests(2); setAddOns([]); setSubmitted(null);
   };
   const toggleAddOn = (id: string) => setAddOns((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const toggleSupport = (need: string) => setSupportNeeds((current) => current.includes(need) ? current.filter((item) => item !== need) : [...current, need]);
   const duration = "days" in selected ? selected.days : selected.duration;
   const guestOptions = "days" in selected && selected.id === "kaypoh-oku-group" ? Array.from({ length: 11 }, (_, index) => index + 10) : [1,2,3,4,5,6,7,8];
 
-  if (submitted) return <main className="booking-success"><div><Image src="/brand/kaypoh-dark-outline.png" alt="Kay Poh" width={105} height={94} /><span className="success-mark">✓</span><p className="booking-kicker">Booking request received</p><h1>Your Ipoh story<br /><em>starts here.</em></h1><p>We’ve reserved your request for <strong>{selected.title}</strong> with <strong>{guide.name}</strong>. A confirmation and payment link will be sent after the guide accepts.</p><div className="success-reference"><span>REFERENCE</span><strong>KP-B2050</strong></div><Link className="booking-primary" href="/">Back to Kay Poh <span>→</span></Link></div></main>;
+  const submitBooking = async () => {
+    if (type !== "package") { setSubmitError("Experience bookings are coming soon. Please choose a package."); return; }
+    setSubmitting(true); setSubmitError("");
+    try {
+      const response = await fetch("/api/bookings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ member: travellerName.trim(), email: travellerEmail.trim(), packageId: selected.id, packageName: selected.title, guideId: guide.id, guide: guide.name, startDate: date, guests, value: total, rateLabel: selectedRate?.label ?? "Standard rate", addOns, supportNeeds, supportNotes }) });
+      const result = await response.json() as Booking | { error?: string };
+      if (!response.ok) throw new Error("error" in result ? result.error : "Unable to submit booking.");
+      setSubmitted(result as Booking);
+    } catch (error) { setSubmitError(error instanceof Error ? error.message : "Unable to submit booking."); } finally { setSubmitting(false); }
+  };
+
+  if (submitted) return <main className="booking-success"><div><Image src="/brand/kaypoh-dark-outline.png" alt="Kay Poh" width={105} height={94} /><span className="success-mark">✓</span><p className="booking-kicker">Booking request received</p><h1>Your Ipoh story<br /><em>starts here.</em></h1><p>We’ve sent <strong>{submitted.packageName}</strong> to <strong>{submitted.guide}</strong> for acceptance. Once accepted, its itinerary will automatically appear as an upcoming tour.</p><div className="success-reference"><span>REFERENCE</span><strong>{submitted.id}</strong></div><Link className="booking-primary" href="/">Back to Kay Poh <span>→</span></Link></div></main>;
 
   return <main className="booking-page">
     <header className="booking-header"><Link href="/" aria-label="Kay Poh home"><Image src="/brand/kaypoh-dark-outline.png" alt="Kay Poh" width={82} height={74} priority /></Link><div className="booking-progress"><span className="active">1 <i>Choose</i></span><b /><span className="active">2 <i>Personalise</i></span><b /><span>3 <i>Confirm</i></span></div><Link href="/">Close ×</Link></header>
@@ -54,7 +70,7 @@ export default function BookingFlow() {
 
         <section className="booking-step"><header><span>02</span><div><h2>Pick your {type}</h2><p>{type === "package" ? "Stay, itinerary, transfers, and guide bundled together." : "Perfect for day visitors or as an add-on to your own plans."}</p></div></header><div className="product-options">{products.map((item) => <button className={productId === item.id ? "active" : ""} onClick={() => { setProductId(item.id); setRateLabel(""); setGuests(item.id === "kaypoh-oku-group" ? 10 : 2); }} key={item.id}><div className={`product-swatch ${"color" in item ? item.color : ""}`}><span>{"days" in item ? item.days : item.number}</span></div><div><strong>{item.title}</strong><p>{item.description}</p><small>{"days" in item ? item.days : item.duration} · From {item.currency}{item.price} / pax</small></div><i>{productId === item.id ? "●" : "○"}</i></button>)}</div></section>
 
-        <section className="booking-step"><header><span>03</span><div><h2>Set the details</h2><p>Availability will be confirmed with your selected guide.</p></div></header><div className="detail-grid">{travellerRates.length > 0 && <label>Traveller rate<select value={selectedRate?.label ?? ""} onChange={(event) => setRateLabel(event.target.value)}>{travellerRates.map((rate) => <option value={rate.label} key={rate.label}>{rate.label} — RM{rate.price.toLocaleString("en-MY")}</option>)}</select></label>}<label>Preferred start date<input type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label><label>Number of travellers<select value={guests} onChange={(event) => setGuests(Number(event.target.value))}>{guestOptions.map((count) => <option value={count} key={count}>{count} {count === 1 ? "traveller" : "travellers"}</option>)}</select></label></div></section>
+        <section className="booking-step"><header><span>03</span><div><h2>Set the details</h2><p>Availability will be confirmed with your selected guide.</p></div></header><div className="detail-grid"><label>Your name<input value={travellerName} onChange={(event) => setTravellerName(event.target.value)} placeholder="Traveller name" /></label><label>Email address<input type="email" value={travellerEmail} onChange={(event) => setTravellerEmail(event.target.value)} placeholder="you@example.com" /></label>{travellerRates.length > 0 && <label>Traveller rate<select value={selectedRate?.label ?? ""} onChange={(event) => setRateLabel(event.target.value)}>{travellerRates.map((rate) => <option value={rate.label} key={rate.label}>{rate.label} — RM{rate.price.toLocaleString("en-MY")}</option>)}</select></label>}<label>Preferred start date<input type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label><label>Number of travellers<select value={guests} onChange={(event) => setGuests(Number(event.target.value))}>{guestOptions.map((count) => <option value={count} key={count}>{count} {count === 1 ? "traveller" : "travellers"}</option>)}</select></label></div></section>
 
         <section className="booking-step"><header><span>04</span><div><h2>Tell us what support helps</h2><p>Select anything relevant. We will confirm the exact access plan privately before your booking is final.</p></div></header><div className="support-options">{accessibilityNeeds.map((need) => <label key={need}><input type="checkbox" checked={supportNeeds.includes(need)} onChange={() => toggleSupport(need)} /><span>✓</span>{need}</label>)}</div><label className="support-notes">Anything else we should plan for?<textarea value={supportNotes} onChange={(event) => setSupportNotes(event.target.value)} placeholder="For example: transfer method, mobility equipment dimensions, communication preferences, carer arrangements, sensory triggers, medication timing…" rows={4} /></label><p className="privacy-note">🔒 Your support information is only used to plan your trip and will be shared only with the team members who need it.</p></section>
 
@@ -63,7 +79,7 @@ export default function BookingFlow() {
         <section className="booking-step"><header><span>06</span><div><h2>Add a little extra</h2><p>Optional touches to make the trip work better for you.</p></div></header><div className="addon-list">{availableAddOns.map((item) => <label key={item.id}><input type="checkbox" checked={addOns.includes(item.id)} onChange={() => toggleAddOn(item.id)} /><span /><div><strong>{item.name}</strong><small>{item.description}</small></div><b>+RM{item.price}</b></label>)}</div></section>
       </section>
 
-      <aside className="booking-summary"><div className="summary-card"><p className="booking-kicker">Your booking</p><div className={`summary-art ${"color" in selected ? selected.color : ""}`}><span>{duration}</span><small>OKU-FIRST {type === "package" ? "GETAWAY" : "EXPERIENCE"}</small></div><h2>{selected.title}</h2><div className="summary-guide"><span className={`booking-avatar avatar-${guide.color}`}>{guide.initials}</span><div><small>Your trip companion</small><strong>{guide.name}</strong></div><span>★ {guide.rating}</span></div><dl><div><dt>Date</dt><dd>{date || "Choose a date"}</dd></div>{selectedRate && <div><dt>Traveller rate</dt><dd>{selectedRate.label}</dd></div>}<div><dt>Travellers</dt><dd>{guests}</dd></div><div><dt>Support needs shared</dt><dd>{supportNeeds.length || "None yet"}</dd></div><div><dt>Base price</dt><dd>{selected.currency}{unitPrice} × {guests}</dd></div>{addOns.length > 0 && <div><dt>Add-ons</dt><dd>RM{addOnTotal}</dd></div>}</dl><div className="summary-total"><span>Total estimate<small>Taxes included</small></span><strong>RM{total.toLocaleString("en-MY")}</strong></div><button className="booking-primary" disabled={!date} onClick={() => setSubmitted(true)}>Request access review <span>→</span></button>{!date && <p className="date-reminder">Choose a preferred date to continue.</p>}<p className="booking-assurance">No payment yet. We confirm your access plan first.</p></div><div className="summary-help"><span>?</span><div><strong>Need help before booking?</strong><p>Talk to our access team.</p></div><a href="mailto:hello@kaypoh.tours">Get help →</a></div></aside>
+      <aside className="booking-summary"><div className="summary-card"><p className="booking-kicker">Your booking</p><div className={`summary-art ${"color" in selected ? selected.color : ""}`}><span>{duration}</span><small>OKU-FIRST {type === "package" ? "GETAWAY" : "EXPERIENCE"}</small></div><h2>{selected.title}</h2><div className="summary-guide"><span className={`booking-avatar avatar-${guide.color}`}>{guide.initials}</span><div><small>Your trip companion</small><strong>{guide.name}</strong></div><span>★ {guide.rating}</span></div><dl><div><dt>Date</dt><dd>{date || "Choose a date"}</dd></div>{selectedRate && <div><dt>Traveller rate</dt><dd>{selectedRate.label}</dd></div>}<div><dt>Travellers</dt><dd>{guests}</dd></div><div><dt>Support needs shared</dt><dd>{supportNeeds.length || "None yet"}</dd></div><div><dt>Base price</dt><dd>{selected.currency}{unitPrice} × {guests}</dd></div>{addOns.length > 0 && <div><dt>Add-ons</dt><dd>RM{addOnTotal}</dd></div>}</dl><div className="summary-total"><span>Total estimate<small>Taxes included</small></span><strong>RM{total.toLocaleString("en-MY")}</strong></div><button className="booking-primary" disabled={!date || !travellerName.trim() || !travellerEmail.trim() || submitting} onClick={submitBooking}>{submitting ? "Sending request…" : "Request access review"} <span>→</span></button>{(!date || !travellerName.trim() || !travellerEmail.trim()) && <p className="date-reminder">Add your name, email, and preferred date to continue.</p>}{submitError && <p className="date-reminder" role="alert">{submitError}</p>}<p className="booking-assurance">No payment yet. We confirm your access plan first.</p></div><div className="summary-help"><span>?</span><div><strong>Need help before booking?</strong><p>Talk to our access team.</p></div><a href="mailto:hello@kaypoh.tours">Get help →</a></div></aside>
     </div>
   </main>;
 }

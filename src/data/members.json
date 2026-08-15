@@ -1,0 +1,72 @@
+[
+  {
+    "id": "KP-M1025",
+    "name": "test",
+    "email": "test@asd.cs",
+    "joined": "15 Aug 2026",
+    "bookings": 1,
+    "spent": 0,
+    "status": "New",
+    "initials": "T"
+  },
+  {
+    "id": "KP-M1024",
+    "name": "Alicia Tan",
+    "email": "alicia.tan@example.com",
+    "joined": "12 Aug 2026",
+    "bookings": 3,
+    "spent": 1287,
+    "status": "Active",
+    "initials": "AT"
+  },
+  {
+    "id": "KP-M1023",
+    "name": "Marcus Lee",
+    "email": "marcus.lee@example.com",
+    "joined": "10 Aug 2026",
+    "bookings": 1,
+    "spent": 699,
+    "status": "Active",
+    "initials": "ML"
+  },
+  {
+    "id": "KP-M1022",
+    "name": "Nur Aisyah",
+    "email": "aisyah@example.com",
+    "joined": "08 Aug 2026",
+    "bookings": 4,
+    "spent": 1840,
+    "status": "Active",
+    "initials": "NA"
+  },
+  {
+    "id": "KP-M1021",
+    "name": "Daniel Wong",
+    "email": "daniel.w@example.com",
+    "joined": "02 Aug 2026",
+    "bookings": 2,
+    "spent": 858,
+    "status": "Active",
+    "initials": "DW"
+  },
+  {
+    "id": "KP-M1020",
+    "name": "Siti Hajar",
+    "email": "siti.hajar@example.com",
+    "joined": "29 Jul 2026",
+    "bookings": 0,
+    "spent": 0,
+    "status": "New",
+    "initials": "SH"
+  },
+  {
+    "id": "KP-M1019",
+    "name": "James Carter",
+    "email": "j.carter@example.com",
+    "joined": "24 Jul 2026",
+    "bookings": 1,
+    "spent": 459,
+    "status": "Inactive",
+    "initials": "JC"
+  }
+]
