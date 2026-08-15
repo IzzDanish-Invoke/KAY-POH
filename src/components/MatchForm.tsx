@@ -1,7 +1,11 @@
 "use client";
 
 import { useId, useState } from "react";
-import { matchingQuestions, packages, tourGuides as initialTourGuides } from "@/data/data";
+import {
+  matchingQuestions,
+  packages,
+  tourGuides as initialTourGuides,
+} from "@/data/data";
 import { useTourGuides } from "@/hooks/useTourGuides";
 
 function ArrowIcon() {
@@ -74,6 +78,12 @@ export default function MatchForm() {
   const [travellerType, setTravellerType] = useState<TravellerType>("tourist");
   const [disabilityType, setDisabilityType] = useState(DISABILITY_TYPES[0]);
   const [buddyOption, setBuddyOption] = useState<"with" | "without">("with");
+  const [groupDisabilityMode, setGroupDisabilityMode] = useState<
+    "same" | "different"
+  >("same");
+  const [groupDisabilityType, setGroupDisabilityType] = useState(
+    DISABILITY_TYPES[0],
+  );
   const [participants, setParticipants] = useState<Participant[]>([
     emptyParticipant(`${idPrefix}-1`),
   ]);
@@ -227,195 +237,276 @@ export default function MatchForm() {
       )}
 
       {!showBookingDetails && (
-        <button
-          type="button"
-          className="match-button"
-          onClick={handleContinue}
-        >
+        <button type="button" className="match-button" onClick={handleContinue}>
           Continue with booking <ArrowIcon />
         </button>
       )}
 
-      {showBookingDetails && !bookingConfirmed && travellerType === "disabled-group" && (
-        <div className="participant-field">
-          <div className="participant-field-heading">
-            <span className="field-label">Group participants</span>
-            <span
-              className={`participant-count${groupIsBelowMinimum ? " below-minimum" : ""}`}
-            >
-              {participants.length} / {MIN_GROUP_SIZE} minimum
-            </span>
-          </div>
-          <div className="participant-list">
-            {participants.map((participant, index) => (
-              <div className="participant-card" key={participant.id}>
-                <div className="participant-card-header">
-                  <span>Participant {index + 1}</span>
-                  <button
-                    type="button"
-                    className="remove-participant"
-                    onClick={() => removeParticipant(participant.id)}
-                    disabled={participants.length === 1}
-                    aria-label={`Remove participant ${index + 1}`}
-                  >
-                    ×
-                  </button>
-                </div>
-                <div className="participant-card-grid">
-                  <label>
-                    First name
-                    <input
-                      required
-                      placeholder="First name"
-                      value={participant.firstName}
-                      onChange={(event) =>
-                        updateParticipant(participant.id, "firstName", event.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Last name
-                    <input
-                      required
-                      placeholder="Last name"
-                      value={participant.lastName}
-                      onChange={(event) =>
-                        updateParticipant(participant.id, "lastName", event.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    IC / Passport no.
-                    <input
-                      required
-                      placeholder="IC / Passport no."
-                      value={participant.icNumber}
-                      onChange={(event) =>
-                        updateParticipant(participant.id, "icNumber", event.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Type of disability
-                    <select
-                      value={participant.disabilityType}
-                      onChange={(event) =>
-                        updateParticipant(participant.id, "disabilityType", event.target.value)
-                      }
-                    >
-                      {DISABILITY_TYPES.map((option) => (
-                        <option key={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    Email
-                    <input
-                      required
-                      type="email"
-                      placeholder="you@example.com"
-                      value={participant.email}
-                      onChange={(event) =>
-                        updateParticipant(participant.id, "email", event.target.value)
-                      }
-                    />
-                  </label>
-                  <label className="contact-field">
-                    Contact no.
-                    <div className="contact-input">
-                      <select
-                        value={participant.countryCode}
-                        onChange={(event) =>
-                          updateParticipant(participant.id, "countryCode", event.target.value)
-                        }
-                      >
-                        {COUNTRY_CODES.map((code) => (
-                          <option key={code} value={code}>{code}</option>
-                        ))}
-                      </select>
-                      <input
-                        required
-                        type="tel"
-                        placeholder="12-345 6789"
-                        value={participant.contact}
-                        onChange={(event) =>
-                          updateParticipant(participant.id, "contact", event.target.value)
-                        }
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="add-participant"
-            onClick={addParticipant}
-          >
-            + Add participant
-          </button>
-          {groupIsBelowMinimum && (
-            <p className="group-note">
-              Disabled Group bookings need at least {MIN_GROUP_SIZE}{" "}
-              participants listed before matching.
-            </p>
-          )}
-          <button className="match-button" type="submit" disabled={groupIsBelowMinimum}>
-            Proceed to payment <ArrowIcon />
-          </button>
-        </div>
-      )}
-
-      {showBookingDetails && !bookingConfirmed && travellerType !== "disabled-group" && (
-        <div className="booking-details">
-          <span className="field-label">Your details</span>
-          <div className="booking-details-grid">
-            <label>
-              First name
-              <input required name="firstName" placeholder="First name" />
-            </label>
-            <label>
-              Last name
-              <input required name="lastName" placeholder="Last name" />
-            </label>
-            <label>
-              IC / Passport no.
-              <input required name="icNumber" placeholder="IC / Passport no." />
-            </label>
-            <label>
-              Email
-              <input
-                required
-                type="email"
-                name="email"
-                placeholder="you@example.com"
-              />
-            </label>
-            <label className="contact-field">
-              Contact no.
-              <div className="contact-input">
-                <select name="countryCode" defaultValue="+60">
-                  {COUNTRY_CODES.map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
+      {showBookingDetails &&
+        !bookingConfirmed &&
+        travellerType === "disabled-group" && (
+          <div className="participant-field">
+            <div className="participant-field-heading">
+              <span className="field-label">Group participants</span>
+              <span
+                className={`participant-count${groupIsBelowMinimum ? " below-minimum" : ""}`}
+              >
+                {participants.length} / {MIN_GROUP_SIZE} minimum
+              </span>
+            </div>
+            <div className="group-disability-field">
+              <label className="disability-select-field">
+                Type of disability
+                <select
+                  value={groupDisabilityType}
+                  disabled={groupDisabilityMode !== "same"}
+                  onChange={(event) =>
+                    setGroupDisabilityType(event.target.value)
+                  }
+                >
+                  {DISABILITY_TYPES.map((option) => (
+                    <option key={option}>{option}</option>
                   ))}
                 </select>
+              </label>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={groupDisabilityMode === "same"}
+                className={`buddy-toggle ${groupDisabilityMode === "same" ? "on" : "off"}`}
+                onClick={() =>
+                  setGroupDisabilityMode(
+                    groupDisabilityMode === "same" ? "different" : "same",
+                  )
+                }
+              >
+                <span className="buddy-toggle-track">
+                  <span className="buddy-toggle-knob" />
+                </span>
+                <span className="buddy-toggle-label">
+                  {groupDisabilityMode === "same"
+                    ? "Same disability"
+                    : "Different disabilities"}
+                </span>
+              </button>
+            </div>
+
+            <div className="participant-list">
+              {participants.map((participant, index) => (
+                <div className="participant-card" key={participant.id}>
+                  <div className="participant-card-header">
+                    <span>Participant {index + 1}</span>
+                    <button
+                      type="button"
+                      className="remove-participant"
+                      onClick={() => removeParticipant(participant.id)}
+                      disabled={participants.length === 1}
+                      aria-label={`Remove participant ${index + 1}`}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="participant-card-grid">
+                    <label>
+                      First name
+                      <input
+                        required
+                        placeholder="First name"
+                        value={participant.firstName}
+                        onChange={(event) =>
+                          updateParticipant(
+                            participant.id,
+                            "firstName",
+                            event.target.value,
+                          )
+                        }
+                      />
+                    </label>
+                    <label>
+                      Last name
+                      <input
+                        required
+                        placeholder="Last name"
+                        value={participant.lastName}
+                        onChange={(event) =>
+                          updateParticipant(
+                            participant.id,
+                            "lastName",
+                            event.target.value,
+                          )
+                        }
+                      />
+                    </label>
+                    <label>
+                      IC / Passport no.
+                      <input
+                        required
+                        placeholder="IC / Passport no."
+                        value={participant.icNumber}
+                        onChange={(event) =>
+                          updateParticipant(
+                            participant.id,
+                            "icNumber",
+                            event.target.value,
+                          )
+                        }
+                      />
+                    </label>
+                    <label>
+                      Type of disability
+                      <select
+                        value={
+                          groupDisabilityMode === "same"
+                            ? groupDisabilityType
+                            : participant.disabilityType
+                        }
+                        disabled={groupDisabilityMode === "same"}
+                        onChange={(event) =>
+                          updateParticipant(
+                            participant.id,
+                            "disabilityType",
+                            event.target.value,
+                          )
+                        }
+                      >
+                        {DISABILITY_TYPES.map((option) => (
+                          <option key={option}>{option}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Email
+                      <input
+                        required
+                        type="email"
+                        placeholder="you@example.com"
+                        value={participant.email}
+                        onChange={(event) =>
+                          updateParticipant(
+                            participant.id,
+                            "email",
+                            event.target.value,
+                          )
+                        }
+                      />
+                    </label>
+                    <label className="contact-field">
+                      Contact no.
+                      <div className="contact-input">
+                        <select
+                          value={participant.countryCode}
+                          onChange={(event) =>
+                            updateParticipant(
+                              participant.id,
+                              "countryCode",
+                              event.target.value,
+                            )
+                          }
+                        >
+                          {COUNTRY_CODES.map((code) => (
+                            <option key={code} value={code}>
+                              {code}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          required
+                          type="tel"
+                          placeholder="12-345 6789"
+                          value={participant.contact}
+                          onChange={(event) =>
+                            updateParticipant(
+                              participant.id,
+                              "contact",
+                              event.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="add-participant"
+              onClick={addParticipant}
+            >
+              + Add participant
+            </button>
+            {groupIsBelowMinimum && (
+              <p className="group-note">
+                Disabled Group bookings need at least {MIN_GROUP_SIZE}{" "}
+                participants listed before matching.
+              </p>
+            )}
+            <button
+              className="match-button"
+              type="submit"
+              disabled={groupIsBelowMinimum}
+            >
+              Proceed to payment <ArrowIcon />
+            </button>
+          </div>
+        )}
+
+      {showBookingDetails &&
+        !bookingConfirmed &&
+        travellerType !== "disabled-group" && (
+          <div className="booking-details">
+            <span className="field-label">Your details</span>
+            <div className="booking-details-grid">
+              <label>
+                First name
+                <input required name="firstName" placeholder="First name" />
+              </label>
+              <label>
+                Last name
+                <input required name="lastName" placeholder="Last name" />
+              </label>
+              <label>
+                IC / Passport no.
                 <input
                   required
-                  type="tel"
-                  name="contact"
-                  placeholder="12-345 6789"
+                  name="icNumber"
+                  placeholder="IC / Passport no."
                 />
-              </div>
-            </label>
+              </label>
+              <label>
+                Email
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                />
+              </label>
+              <label className="contact-field">
+                Contact no.
+                <div className="contact-input">
+                  <select name="countryCode" defaultValue="+60">
+                    {COUNTRY_CODES.map((code) => (
+                      <option key={code} value={code}>
+                        {code}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    required
+                    type="tel"
+                    name="contact"
+                    placeholder="12-345 6789"
+                  />
+                </div>
+              </label>
+            </div>
+            <button className="match-button" type="submit">
+              Proceed to payment <ArrowIcon />
+            </button>
           </div>
-          <button className="match-button" type="submit">
-            Proceed to payment <ArrowIcon />
-          </button>
-        </div>
-      )}
+        )}
 
       {bookingConfirmed && (
         <div className="booking-confirmed">
