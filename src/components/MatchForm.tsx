@@ -1,7 +1,8 @@
 "use client";
 
 import { useId, useState } from "react";
-import { matchingQuestions, packages, tourGuides as initialTourGuides } from "@/data/data";
+import { matchingQuestions, packages as initialPackages, tourGuides as initialTourGuides } from "@/data/data";
+import { usePackages } from "@/hooks/usePackages";
 import { useTourGuides } from "@/hooks/useTourGuides";
 
 function ArrowIcon() {
@@ -38,7 +39,7 @@ const DISABILITY_TYPES = [
 const MIN_GROUP_SIZE = 20;
 
 const DEFAULT_PLAN_ID =
-  packages.find((pkg) => pkg.tag === "Best first visit")?.id ?? packages[0].id;
+  initialPackages.find((pkg) => pkg.tag === "Best first visit")?.id ?? initialPackages[0].id;
 
 const DEFAULT_GUIDE_ID = initialTourGuides[0].id;
 
@@ -70,6 +71,7 @@ function emptyParticipant(id: string): Participant {
 
 export default function MatchForm() {
   const idPrefix = useId();
+  const packages = usePackages();
   const tourGuides = useTourGuides();
   const [travellerType, setTravellerType] = useState<TravellerType>("tourist");
   const [disabilityType, setDisabilityType] = useState(DISABILITY_TYPES[0]);

@@ -1,0 +1,279 @@
+[
+  {
+    "id": "kaypoh-essential",
+    "tag": "Accessible as standard",
+    "days": "Essential",
+    "title": "KAYPOH Essential",
+    "color": "package-coral",
+    "price": 249,
+    "currency": "RM",
+    "description": "For relatively independent travellers who want a properly verified, comfortably paced Ipoh experience.",
+    "highlights": [
+      "Verified itinerary",
+      "Accessible transport",
+      "Group support",
+      "Clear access guide"
+    ],
+    "includes": [
+      "Access-verified itinerary",
+      "Prepared group companion",
+      "Comfortable pacing",
+      "Accessible transport"
+    ],
+    "accessibility": {
+      "mobility": "Accessible as standard",
+      "pace": "Comfortable group pace",
+      "support": "Basic assistance",
+      "venue": "Verified inclusive partners"
+    },
+    "itinerary": [
+      {
+        "day": 1,
+        "label": "Day 1",
+        "title": "Old Town & local flavours",
+        "items": [
+          {
+            "time": "10:00",
+            "activity": "Welcome to Ipoh",
+            "note": "Meet your guide at Ipoh Railway Station and drop off your bags."
+          },
+          {
+            "time": "10:30",
+            "activity": "Heritage & mural walk",
+            "note": "Explore Concubine Lane, Market Lane, and the stories behind Old Town."
+          },
+          {
+            "time": "12:30",
+            "activity": "Classic Ipoh lunch",
+            "note": "A local favourite, selected around your dietary needs."
+          },
+          {
+            "time": "14:00",
+            "activity": "Check-in & free time",
+            "note": "Settle into your centrally located boutique hotel."
+          },
+          {
+            "time": "17:00",
+            "activity": "New Town food trail",
+            "note": "Taste famous street snacks and finish with an easy local dinner."
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Day 2",
+        "title": "Limestone & white coffee",
+        "items": [
+          {
+            "time": "08:00",
+            "activity": "Kopitiam breakfast",
+            "note": "White coffee, kaya toast, and a proper Ipoh morning."
+          },
+          {
+            "time": "09:30",
+            "activity": "Sam Poh Tong temple",
+            "note": "Visit Ipoh’s dramatic limestone cave temple and gardens."
+          },
+          {
+            "time": "11:30",
+            "activity": "Local product stop",
+            "note": "Pick up pomelo, biscuits, or coffee before departure."
+          },
+          {
+            "time": "13:00",
+            "activity": "Trip concludes",
+            "note": "Drop-off at the station or city centre."
+          }
+        ]
+      }
+    ],
+    "published": true
+  },
+  {
+    "id": "kaypoh-plus",
+    "tag": "Most popular · Premium Economy",
+    "days": "2D1N",
+    "title": "KAYPOH Plus",
+    "color": "package-gold",
+    "price": 549,
+    "currency": "RM",
+    "description": "Our core experience with a smaller group, more coordination, slower pacing, and personalised assistance.",
+    "highlights": [
+      "Smaller group",
+      "More assistance",
+      "Accessible stay",
+      "Backup planning"
+    ],
+    "includes": [
+      "Accessible accommodation",
+      "Dedicated trip companion",
+      "Pre-trip coordination",
+      "Wheelchair-ready transfers"
+    ],
+    "accessibility": {
+      "mobility": "Individually reviewed",
+      "pace": "Slower and adjustable",
+      "support": "Personalised assistance",
+      "venue": "Prioritises OKU-run partners"
+    },
+    "itinerary": [
+      {
+        "day": 1,
+        "label": "Day 1",
+        "title": "Eat your way through Ipoh",
+        "items": [
+          {
+            "time": "09:30",
+            "activity": "Old Town breakfast crawl",
+            "note": "White coffee, egg tarts, kaya toast, and local conversation."
+          },
+          {
+            "time": "11:30",
+            "activity": "Market with a local",
+            "note": "Meet traders and discover the ingredients behind Perak cooking."
+          },
+          {
+            "time": "13:00",
+            "activity": "Bean sprout chicken lunch",
+            "note": "Try Ipoh’s most debated signature dish at a guide-approved shop."
+          },
+          {
+            "time": "15:00",
+            "activity": "Hotel check-in",
+            "note": "Rest, wander, or follow our self-guided snack map."
+          },
+          {
+            "time": "18:30",
+            "activity": "Night food safari",
+            "note": "A progressive dinner across three neighbourhood institutions."
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Day 2",
+        "title": "Makers, coffee & keepsakes",
+        "items": [
+          {
+            "time": "08:30",
+            "activity": "Dim sum morning",
+            "note": "Share baskets of Ipoh favourites in a lively local restaurant."
+          },
+          {
+            "time": "10:30",
+            "activity": "White coffee workshop",
+            "note": "Learn how Ipoh’s iconic roast is made and blend your own cup."
+          },
+          {
+            "time": "12:30",
+            "activity": "Farewell lunch",
+            "note": "One final local meal before station drop-off."
+          }
+        ]
+      }
+    ],
+    "published": true
+  },
+  {
+    "id": "kaypoh-private",
+    "tag": "Highest flexibility",
+    "days": "Private",
+    "title": "KAYPOH Private",
+    "color": "package-sage",
+    "price": 899,
+    "currency": "RM",
+    "description": "For individuals, families, or small groups needing a custom itinerary and dedicated end-to-end support.",
+    "highlights": [
+      "Private group",
+      "Custom itinerary",
+      "Dedicated support",
+      "Flexible timing"
+    ],
+    "includes": [
+      "Individual access plan",
+      "Private trip companion",
+      "Personal transport plan",
+      "Contingency planning"
+    ],
+    "accessibility": {
+      "mobility": "Planned individually",
+      "pace": "Fully flexible",
+      "support": "Dedicated support",
+      "venue": "Custom verified partners"
+    },
+    "itinerary": [
+      {
+        "day": 1,
+        "label": "Day 1",
+        "title": "The city and its stories",
+        "items": [
+          {
+            "time": "10:00",
+            "activity": "Station welcome",
+            "note": "Private transfer, luggage drop, and an introduction to Ipoh."
+          },
+          {
+            "time": "11:00",
+            "activity": "Heritage discovery",
+            "note": "Colonial landmarks, murals, laneways, and local legends."
+          },
+          {
+            "time": "14:30",
+            "activity": "Hotel check-in",
+            "note": "A relaxed afternoon before dinner with your guide."
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Day 2",
+        "title": "Beyond the city",
+        "items": [
+          {
+            "time": "08:30",
+            "activity": "Gopeng countryside",
+            "note": "Scenic drive through kampungs and dramatic karst landscapes."
+          },
+          {
+            "time": "10:00",
+            "activity": "Gua Tempurung",
+            "note": "A guided dry cave experience suitable for first-time explorers."
+          },
+          {
+            "time": "13:00",
+            "activity": "Riverside lunch",
+            "note": "A leisurely local meal surrounded by greenery."
+          },
+          {
+            "time": "15:00",
+            "activity": "Kellie’s Castle",
+            "note": "Explore Perak’s most curious unfinished mansion."
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "label": "Day 3",
+        "title": "Temples & a slow goodbye",
+        "items": [
+          {
+            "time": "08:30",
+            "activity": "Cave temple trail",
+            "note": "Visit Perak Tong and a quieter guide-selected sanctuary."
+          },
+          {
+            "time": "11:30",
+            "activity": "Coffee and keepsakes",
+            "note": "Free time for coffee, biscuits, and last-minute shopping."
+          },
+          {
+            "time": "13:00",
+            "activity": "Departure transfer",
+            "note": "Drop-off at your next Ipoh connection."
+          }
+        ]
+      }
+    ],
+    "published": true
+  }
+]

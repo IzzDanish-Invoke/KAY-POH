@@ -147,34 +147,6 @@
     ]
   },
   {
-    "name": "Dan",
-    "email": "dan@d.c",
-    "title": "asd",
-    "bio": "asd",
-    "languages": [
-      "English",
-      "Malay"
-    ],
-    "specialties": [
-      "Mobility support"
-    ],
-    "status": "Available",
-    "licensed": true,
-    "yearsExperience": 1,
-    "expertise": "asd",
-    "perks": [
-      "asd"
-    ],
-    "id": "KP-G005",
-    "initials": "D",
-    "rating": 0,
-    "reviews": 0,
-    "tours": 0,
-    "acceptance": 0,
-    "color": "aqua",
-    "testimonials": []
-  },
-  {
     "name": "rah",
     "email": "asd@c.c",
     "title": "1231",

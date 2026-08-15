@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { packages } from "@/data/data";
-
-type Package = (typeof packages)[number];
+import { usePackages } from "@/hooks/usePackages";
+import type { TourPackage } from "@/types/tour-package";
 
 export default function PackageExplorer() {
-  const [selected, setSelected] = useState<Package | null>(null);
+  const packages = usePackages();
+  const [selected, setSelected] = useState<TourPackage | null>(null);
 
   useEffect(() => {
     if (!selected) return;

@@ -3,15 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { accessibilityNeeds, bookingAddOns, experiences, packages, tourGuides as initialTourGuides } from "@/data/data";
+import { accessibilityNeeds, bookingAddOns, experiences, packages as initialPackages, tourGuides as initialTourGuides } from "@/data/data";
+import { usePackages } from "@/hooks/usePackages";
 import { useTourGuides } from "@/hooks/useTourGuides";
 
 type BookingType = "package" | "experience";
 
 export default function BookingFlow() {
   const tourGuides = useTourGuides();
+  const packages = usePackages();
   const [type, setType] = useState<BookingType>("package");
-  const [productId, setProductId] = useState(packages[0].id);
+  const [productId, setProductId] = useState(initialPackages[0].id);
   const [guideId, setGuideId] = useState(initialTourGuides[0].id);
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(2);
@@ -29,7 +31,7 @@ export default function BookingFlow() {
   const total = subtotal + addOnTotal;
 
   const switchType = (next: BookingType) => {
-    setType(next); setProductId(next === "package" ? packages[0].id : experiences[0].id); setAddOns([]); setSubmitted(false);
+    setType(next); setProductId(next === "package" ? (packages[0]?.id ?? initialPackages[0].id) : experiences[0].id); setAddOns([]); setSubmitted(false);
   };
   const toggleAddOn = (id: string) => setAddOns((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const toggleSupport = (need: string) => setSupportNeeds((current) => current.includes(need) ? current.filter((item) => item !== need) : [...current, need]);

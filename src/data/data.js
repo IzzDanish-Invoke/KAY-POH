@@ -1,8 +1,11 @@
 // Temporary content store.
 // Keep database-shaped content here until a real API/database is connected.
 import tourGuideRecords from "./tour-guides.json";
+import packageRecords from "./packages.json";
 
-export const packages = [
+/* Package records now live in packages.json and are updated through /api/packages. */
+export const packages = packageRecords;
+/*
   {
     id: "kaypoh-essential",
     tag: "Accessible as standard",
@@ -89,7 +92,7 @@ export const packages = [
       ]},
     ],
   },
-];
+]; */
 
 export const experiences = [
   { id: "old-town-stories", number: "01", title: "Old Town, Easy Pace", description: "A step-conscious route through murals, kopitiams, and Ipoh stories, with planned rest points.", duration: "3 hours", price: 85, currency: "RM", color: "coral", accessibility: "Step-free route", venue: "OKU-friendly stops" },
