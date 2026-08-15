@@ -1,0 +1,16 @@
+"use client";
+
+import { useState } from "react";
+import { liveRatingResponses, liveTours } from "@/data/data";
+
+export default function RatingsResponseModal({ tourId, onClose }: { tourId: string; onClose: () => void }) {
+  const tour = liveTours.find((item) => item.id === tourId) ?? liveTours[0];
+  const modulesWithResponses = tour.modules.filter((module) => liveRatingResponses.some((response) => response.tourId === tour.id && response.moduleId === module.id));
+  const [moduleId, setModuleId] = useState(modulesWithResponses[0]?.id ?? tour.modules[0].id);
+  const tripModule = tour.modules.find((item) => item.id === moduleId) ?? tour.modules[0];
+  const responses = liveRatingResponses.filter((response) => response.tourId === tour.id && response.moduleId === moduleId);
+  const average = responses.length ? responses.reduce((sum, response) => sum + response.rating, 0) / responses.length : 0;
+  const distribution = [5,4,3,2,1].map((star) => ({ star, count: responses.filter((response) => response.rating === star).length }));
+
+  return <div className="responses-backdrop" onMouseDown={onClose}><section className="responses-modal" role="dialog" aria-modal="true" aria-labelledby="responses-title" onMouseDown={(event) => event.stopPropagation()}><header><div><p className="admin-eyebrow">Live traveller feedback</p><h2 id="responses-title">Ratings & responses</h2><p>{tour.title} · {tour.date}</p></div><button onClick={onClose} aria-label="Close ratings and responses">×</button></header><div className="response-module-tabs">{modulesWithResponses.map((module) => <button className={module.id === moduleId ? "active" : ""} onClick={() => setModuleId(module.id)} key={module.id}><strong>{module.title}</strong><small>{liveRatingResponses.filter((response) => response.tourId === tour.id && response.moduleId === module.id).length} responses</small></button>)}</div><section className="response-summary"><div><span>Overall module rating</span><strong>★ {average.toFixed(1)}</strong><small>{responses.length} of {tour.guests} travellers responded</small></div><div className="response-distribution">{distribution.map((item) => <span key={item.star}><small>{item.star}★</small><i><b style={{ width: `${responses.length ? (item.count / responses.length) * 100 : 0}%` }} /></i><em>{item.count}</em></span>)}</div><div><span>Response rate</span><strong>{Math.round((responses.length / tour.guests) * 100)}%</strong><small>{tripModule.venue}</small></div></section><div className="individual-responses"><div className="responses-heading"><h3>Individual responses</h3><span>Newest first</span></div>{[...responses].reverse().map((response) => <article key={response.id}><div className="response-score"><strong>{response.rating}</strong><span>★</span></div><div className="response-content"><div><strong>{response.anonymous ? "Anonymous traveller" : "Traveller"}</strong><time>{response.submittedAt}</time></div><div className="response-tags">{response.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><p>{response.comment || <em>No written comment</em>}</p></div></article>)}</div><footer><div><span>Module</span><strong>{tripModule.title}</strong></div><button onClick={onClose}>Done</button></footer></section></div>;
+}

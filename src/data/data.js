@@ -159,3 +159,38 @@ export const accessibilityNeeds = [
   "Personal care companion space",
   "Dietary or allergy planning",
 ];
+
+export const liveTours = [
+  {
+    id: "tour-aug-1501", bookingId: "KP-B2051", title: "KAYPOH Plus · Ipoh", date: "15 Aug 2026", time: "08:30–18:30", status: "Live",
+    guideId: "KP-G001", guide: "Mei Ling Tan", guests: 8, vehicle: "Accessible Van A", progress: 42,
+    modules: [
+      { id: "welcome-breakfast", time: "08:30", title: "Welcome & accessible breakfast", venue: "Kedai Kopi Kinta", status: "Completed", responses: 8, average: 4.8, ratings: [0,0,0,2,6] },
+      { id: "old-town-route", time: "10:00", title: "Step-free Old Town route", venue: "Ipoh Old Town", status: "Rating open", responses: 5, average: 4.4, ratings: [0,0,1,1,3] },
+      { id: "inclusive-lunch", time: "12:30", title: "Inclusive community lunch", venue: "Dapur Muafakat", status: "Next", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "makers-workshop", time: "14:30", title: "OKU makers workshop", venue: "Kinta Inclusive Studio", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "evening-reflection", time: "17:00", title: "Coffee & trip reflection", venue: "Access Café Ipoh", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+    ],
+  },
+  {
+    id: "tour-aug-1502", bookingId: "KP-B2052", title: "Old Town, Easy Pace", date: "15 Aug 2026", time: "14:00–17:00", status: "Starting soon",
+    guideId: "KP-G004", guide: "Priya Nair", guests: 5, vehicle: "Accessible Van B", progress: 0,
+    modules: [
+      { id: "easy-pace-briefing", time: "14:00", title: "Access briefing & introductions", venue: "Ipoh Railway Station", status: "Next", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "easy-pace-walk", time: "14:30", title: "Easy-pace heritage route", venue: "Ipoh Old Town", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+      { id: "easy-pace-coffee", time: "16:15", title: "Accessible coffee stop", venue: "Access Café Ipoh", status: "Upcoming", responses: 0, average: 0, ratings: [0,0,0,0,0] },
+    ],
+  },
+];
+
+export const liveRatingResponses = [
+  { id: "R-1001", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Comfortable pace", "Easy to access", "Helpful companion"], comment: "The van pickup and breakfast seating were both very easy for my wheelchair.", submittedAt: "09:42", anonymous: true },
+  { id: "R-1002", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Helpful companion", "Enjoyable activity"], comment: "Mei Ling explained the day clearly and checked what support I preferred.", submittedAt: "09:44", anonymous: true },
+  { id: "R-1003", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 4, tags: ["Good rest facilities"], comment: "Accessible toilet was useful. A little more space between tables would help.", submittedAt: "09:45", anonymous: true },
+  { id: "R-1004", tourId: "tour-aug-1501", moduleId: "welcome-breakfast", rating: 5, tags: ["Comfortable pace", "Enjoyable activity"], comment: "", submittedAt: "09:47", anonymous: true },
+  { id: "R-1005", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Easy to access", "Helpful companion"], comment: "The alternative ramp route worked well and never felt like a lesser experience.", submittedAt: "11:51", anonymous: true },
+  { id: "R-1006", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 4, tags: ["Comfortable pace", "Good rest facilities"], comment: "Would appreciate one more shaded rest point near Concubine Lane.", submittedAt: "11:53", anonymous: true },
+  { id: "R-1007", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 3, tags: ["Needs improvement"], comment: "One pavement section was quite uneven for my walking frame.", submittedAt: "11:55", anonymous: true },
+  { id: "R-1008", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Enjoyable activity", "Helpful companion"], comment: "Loved the stories and the group size was just right.", submittedAt: "11:58", anonymous: true },
+  { id: "R-1009", tourId: "tour-aug-1501", moduleId: "old-town-route", rating: 5, tags: ["Easy to access"], comment: "", submittedAt: "12:01", anonymous: true },
+];
