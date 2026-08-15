@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { tourGuides } from "@/data/data";
+import { useTourGuides } from "@/hooks/useTourGuides";
 
 const STATUS_CLASS: Record<string, string> = {
   Available: "available",
@@ -11,6 +11,7 @@ const STATUS_CLASS: Record<string, string> = {
 
 export default function TourGuides() {
   const [selectedGuideId, setSelectedGuideId] = useState<string | null>(null);
+  const tourGuides = useTourGuides();
 
   return (
     <section className="guides shell" id="guides">

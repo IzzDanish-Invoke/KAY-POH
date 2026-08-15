@@ -3,14 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { accessibilityNeeds, bookingAddOns, experiences, packages, tourGuides } from "@/data/data";
+import { accessibilityNeeds, bookingAddOns, experiences, packages, tourGuides as initialTourGuides } from "@/data/data";
+import { useTourGuides } from "@/hooks/useTourGuides";
 
 type BookingType = "package" | "experience";
 
 export default function BookingFlow() {
+  const tourGuides = useTourGuides();
   const [type, setType] = useState<BookingType>("package");
   const [productId, setProductId] = useState(packages[0].id);
-  const [guideId, setGuideId] = useState(tourGuides[0].id);
+  const [guideId, setGuideId] = useState(initialTourGuides[0].id);
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(2);
   const [addOns, setAddOns] = useState<string[]>([]);

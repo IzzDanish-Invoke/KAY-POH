@@ -1,0 +1,330 @@
+/* Admin-only layout safeguards. Keep these rules scoped so public pages are unaffected. */
+.admin-shell,
+.admin-shell *,
+.admin-shell *::before,
+.admin-shell *::after {
+  box-sizing: border-box;
+}
+
+.admin-shell button,
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  font-family: inherit;
+}
+
+.admin-shell button:not(:disabled) {
+  cursor: pointer;
+}
+
+.admin-shell button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.admin-shell button:focus-visible,
+.admin-shell a:focus-visible,
+.admin-shell input:focus-visible,
+.admin-shell select:focus-visible,
+.admin-shell textarea:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  min-width: 0;
+  min-height: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.guide-card-top {
+  align-items: flex-start;
+}
+
+.guide-card-top > .admin-status,
+.guide-profile-lead > .admin-status {
+  align-self: flex-start;
+}
+
+.guide-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.guide-card .guide-bio {
+  overflow-wrap: anywhere;
+}
+
+.guide-card .guide-tags {
+  flex-wrap: wrap;
+}
+
+.guide-card .guide-numbers {
+  margin-top: auto;
+}
+
+.guide-card footer {
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.guide-card footer > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.guide-card-actions {
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.guide-card-actions button {
+  padding: 5px 2px;
+}
+
+.admin-workspace,
+.admin-main,
+.admin-card,
+.request-main,
+.live-tour-layout,
+.live-itinerary,
+.live-insights,
+.cms-editor {
+  min-width: 0;
+}
+
+.admin-topbar > div:first-of-type,
+.admin-section-head > div,
+.admin-welcome > div {
+  min-width: 0;
+}
+
+.admin-topbar h1,
+.admin-section-head h2,
+.admin-welcome h2,
+.request-main h3,
+.live-tour-hero h2 {
+  overflow-wrap: anywhere;
+}
+
+.topbar-actions {
+  flex: 0 0 auto;
+}
+
+.role-switch button,
+.topbar-actions > button,
+.mobile-menu,
+.qr-close {
+  cursor: pointer;
+}
+
+.module-tabs,
+.live-tour-tabs,
+.response-module-tabs {
+  scrollbar-width: thin;
+}
+
+.module-tabs {
+  overflow-x: auto;
+}
+
+.module-tabs button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.booking-request,
+.live-module {
+  min-width: 0;
+}
+
+.request-main > div,
+.module-copy {
+  min-width: 0;
+}
+
+.module-copy h3,
+.module-copy p,
+.request-main p {
+  overflow-wrap: anywhere;
+}
+
+.guide-create-modal > header > button,
+.responses-modal > header > button,
+.qr-close {
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.guide-create-modal input,
+.guide-create-modal textarea,
+.guide-create-modal select {
+  min-width: 0;
+}
+
+.guide-create-modal form > footer button,
+.responses-modal > footer button {
+  min-height: 36px;
+}
+
+.table-tools {
+  flex-wrap: wrap;
+}
+
+.table-tools label {
+  min-width: min(100%, 230px);
+}
+
+.publish-toggle {
+  cursor: pointer;
+}
+
+.responses-fab {
+  max-width: calc(100vw - 30px);
+}
+
+@media (max-width: 1100px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .live-module {
+    grid-template-columns: 30px 46px minmax(0, 1fr) 68px;
+  }
+
+  .module-actions {
+    grid-column: 3 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-topbar {
+    gap: 10px;
+  }
+
+  .admin-topbar > div:first-of-type p {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .admin-section-head,
+  .admin-welcome {
+    gap: 14px;
+  }
+
+  .admin-section-head .admin-primary,
+  .admin-welcome .admin-primary {
+    width: 100%;
+  }
+
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-request {
+    overflow: hidden;
+  }
+
+  .request-main {
+    padding: 16px;
+  }
+
+  .request-actions {
+    padding: 14px 16px;
+  }
+
+  .live-tour-hero {
+    padding: 22px 20px 30px;
+  }
+
+  .cms-editor > footer {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 520px) {
+  .admin-topbar h1 {
+    max-width: 150px;
+    font-size: 17px;
+  }
+
+  .metric-grid,
+  .stats-highlight {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-highlight article:last-child {
+    grid-column: auto;
+  }
+
+  .guide-card {
+    padding: 17px;
+  }
+
+  .guide-numbers strong {
+    font-size: 13px;
+  }
+
+  .guide-card footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guide-card-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .live-module {
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .live-module time,
+  .module-copy,
+  .module-score,
+  .module-actions {
+    grid-column: 2;
+  }
+
+  .module-actions {
+    margin-top: 4px;
+  }
+
+  .response-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .response-distribution {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .responses-modal > footer {
+    align-items: flex-start;
+    gap: 14px;
+    flex-direction: column;
+  }
+
+  .responses-modal > footer button {
+    width: 100%;
+  }
+}

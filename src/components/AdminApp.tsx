@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { dashboardMetrics, guideBookingRequests, members, monthlyBookings, packages, tourGuides } from "@/data/data";
 import LiveToursAdmin from "@/components/LiveToursAdmin";
+import type { TourGuide } from "@/types/tour-guide";
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: "⌂", badge: undefined },
@@ -114,37 +115,108 @@ function GuideBookings({ bookingStatuses, setBookingStatuses }: { bookingStatuse
 function Guides({ bookingStatuses }: { bookingStatuses: Record<string, BookingStatus> }) {
   const [tab, setTab] = useState<"guides" | "requests">("guides");
   const [showCreate, setShowCreate] = useState(false);
-  const [guideList, setGuideList] = useState([...tourGuides]);
-  const [newGuide, setNewGuide] = useState({ name: "", email: "", title: "", languages: "English, Malay", specialties: "Mobility support", bio: "", status: "Available" });
+  const [selectedGuide, setSelectedGuide] = useState<TourGuide | null>(null);
+  const [editingGuide, setEditingGuide] = useState<TourGuide | null>(null);
+  const [guideList, setGuideList] = useState<TourGuide[]>(tourGuides as TourGuide[]);
+  const emptyGuide = { name: "", email: "", title: "", languages: "English, Malay", specialties: "Mobility support", bio: "", status: "Available", licensed: true, yearsExperience: "", expertise: "", perks: "" };
+  const [newGuide, setNewGuide] = useState(emptyGuide);
+  const [savingGuide, setSavingGuide] = useState(false);
+  const [guideError, setGuideError] = useState("");
   const pendingCount = Object.values(bookingStatuses).filter((status) => status === "Pending").length;
 
-  const createGuide = (event: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/tour-guides", { cache: "no-store", signal: controller.signal })
+      .then((response) => response.ok ? response.json() as Promise<TourGuide[]> : Promise.reject())
+      .then(setGuideList)
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
+
+  const createGuide = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const initials = newGuide.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "NG";
-    setGuideList((current) => [...current, {
-      id: `KP-G${String(current.length + 1).padStart(3, "0")}`,
+    setSavingGuide(true);
+    setGuideError("");
+    const payload = {
       name: newGuide.name,
-      initials,
+      email: newGuide.email,
       title: newGuide.title,
       bio: newGuide.bio || "New KAYPOH trip companion profile.",
       languages: newGuide.languages.split(",").map((item) => item.trim()).filter(Boolean),
       specialties: newGuide.specialties.split(",").map((item) => item.trim()).filter(Boolean),
-      rating: 0,
-      reviews: 0,
-      tours: 0,
-      acceptance: 0,
       status: newGuide.status,
-      color: "aqua",
-    }]);
-    setShowCreate(false);
-    setNewGuide({ name: "", email: "", title: "", languages: "English, Malay", specialties: "Mobility support", bio: "", status: "Available" });
+      licensed: newGuide.licensed,
+      yearsExperience: Number(newGuide.yearsExperience) || 0,
+      expertise: newGuide.expertise || "Profile expertise pending review.",
+      perks: newGuide.perks.split("\n").map((item) => item.trim()).filter(Boolean),
+    };
+
+    try {
+      const response = await fetch("/api/tour-guides", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json() as TourGuide | { error?: string };
+      if (!response.ok) throw new Error("error" in result ? result.error : "Unable to create guide.");
+      setGuideList((current) => [...current, result as TourGuide]);
+      setShowCreate(false);
+      setNewGuide(emptyGuide);
+    } catch (error) {
+      setGuideError(error instanceof Error ? error.message : "Unable to create guide.");
+    } finally {
+      setSavingGuide(false);
+    }
+  };
+
+  const saveEditedGuide = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!editingGuide) return;
+    setSavingGuide(true);
+    setGuideError("");
+    try {
+      const response = await fetch(`/api/tour-guides/${encodeURIComponent(editingGuide.id)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingGuide),
+      });
+      const result = await response.json() as TourGuide | { error?: string };
+      if (!response.ok) throw new Error("error" in result ? result.error : "Unable to update guide.");
+      const updated = result as TourGuide;
+      setGuideList((current) => current.map((guide) => guide.id === updated.id ? updated : guide));
+      setSelectedGuide((current) => current?.id === updated.id ? updated : current);
+      setEditingGuide(null);
+    } catch (error) {
+      setGuideError(error instanceof Error ? error.message : "Unable to update guide.");
+    } finally {
+      setSavingGuide(false);
+    }
+  };
+
+  const removeGuide = async (guide: TourGuide) => {
+    if (!window.confirm(`Delete ${guide.name}? This removes the guide from the landing page and booking forms.`)) return;
+    setGuideError("");
+    try {
+      const response = await fetch(`/api/tour-guides/${encodeURIComponent(guide.id)}`, { method: "DELETE" });
+      if (!response.ok) {
+        const result = await response.json() as { error?: string };
+        throw new Error(result.error || "Unable to delete guide.");
+      }
+      setGuideList((current) => current.filter((item) => item.id !== guide.id));
+      setSelectedGuide((current) => current?.id === guide.id ? null : current);
+    } catch (error) {
+      setGuideError(error instanceof Error ? error.message : "Unable to delete guide.");
+    }
   };
 
   return <>
     <section className="admin-section-head"><div><h2>Tour guides & bookings</h2><p>Manage local companions and supervise their incoming booking requests.</p></div>{tab === "guides" && <button className="admin-primary" onClick={() => setShowCreate(true)}>＋ Add guide</button>}</section>
     <div className="module-tabs"><button className={tab === "guides" ? "active" : ""} onClick={() => setTab("guides")}>Tour guide directory</button><button className={tab === "requests" ? "active" : ""} onClick={() => setTab("requests")}>Booking requests <b>{pendingCount}</b></button></div>
-    {tab === "guides" ? <div className="guide-grid">{guideList.map((guide) => <article className="guide-card" key={guide.id}><div className="guide-card-top"><span className={`guide-avatar large avatar-${guide.color}`}>{guide.initials}</span><Status>{guide.status}</Status></div><h3>{guide.name}</h3><p className="guide-title">{guide.title}</p><p className="guide-bio">{guide.bio}</p><div className="guide-tags">{guide.specialties.map((tag) => <span key={tag}>{tag}</span>)}</div><div className="guide-numbers"><span><strong>{guide.reviews ? `★ ${guide.rating}` : "New"}</strong><small>{guide.reviews} reviews</small></span><span><strong>{guide.tours}</strong><small>Tours</small></span><span><strong>{guide.acceptance}%</strong><small>Accept rate</small></span></div><footer><span>{guide.languages.join(" · ")}</span><button>View profile →</button></footer></article>)}</div> : <section className="booking-request-list">{guideBookingRequests.map((booking) => <article className="booking-request" key={booking.id}><div className="request-date"><small>TRIP DATES</small><strong>{booking.date}</strong><span>{booking.guests} guest{booking.guests > 1 ? "s" : ""}</span></div><div className="request-main"><div><span className="booking-id">{booking.id}</span><h3>{booking.packageName}</h3><p>Requested by <strong>{booking.member}</strong> · Assigned to <strong>{booking.guide}</strong></p></div><strong>{money(booking.value)}</strong></div><div className="request-actions"><Status>{bookingStatuses[booking.id]}</Status></div></article>)}</section>}
-    {showCreate && <div className="guide-modal-backdrop" onMouseDown={() => setShowCreate(false)}><section className="guide-create-modal" role="dialog" aria-modal="true" aria-labelledby="create-guide-title" onMouseDown={(event) => event.stopPropagation()}><header><div><p className="admin-eyebrow">New team member</p><h2 id="create-guide-title">Create tour guide</h2></div><button onClick={() => setShowCreate(false)} aria-label="Close create guide form">×</button></header><form onSubmit={createGuide}><div className="guide-form-grid"><label>Full name<input required value={newGuide.name} onChange={(event) => setNewGuide({ ...newGuide, name: event.target.value })} placeholder="e.g. Aina Rahman" /></label><label>Email address<input required type="email" value={newGuide.email} onChange={(event) => setNewGuide({ ...newGuide, email: event.target.value })} placeholder="aina@kaypoh.my" /></label><label className="form-wide">Guide title<input required value={newGuide.title} onChange={(event) => setNewGuide({ ...newGuide, title: event.target.value })} placeholder="e.g. Access-trained heritage companion" /></label><label>Languages<input value={newGuide.languages} onChange={(event) => setNewGuide({ ...newGuide, languages: event.target.value })} /><small>Separate with commas</small></label><label>Support specialties<input value={newGuide.specialties} onChange={(event) => setNewGuide({ ...newGuide, specialties: event.target.value })} /><small>Separate with commas</small></label><label className="form-wide">Short biodata<textarea rows={4} value={newGuide.bio} onChange={(event) => setNewGuide({ ...newGuide, bio: event.target.value })} placeholder="Training, experience, and approach to supporting OKU travellers…" /></label><label>Initial availability<select value={newGuide.status} onChange={(event) => setNewGuide({ ...newGuide, status: event.target.value })}><option>Available</option><option>Off duty</option></select></label></div><footer><button type="button" onClick={() => setShowCreate(false)}>Cancel</button><button className="admin-primary" type="submit">Create guide →</button></footer></form></section></div>}
+    {guideError && !showCreate && !editingGuide && <p className="guide-page-error" role="alert">{guideError}</p>}
+    {tab === "guides" ? <div className="guide-grid">{guideList.map((guide) => <article className="guide-card" key={guide.id}><div className="guide-card-top"><span className={`guide-avatar large avatar-${guide.color}`}>{guide.initials}</span><Status>{guide.status}</Status></div><h3>{guide.name}</h3><p className="guide-title">{guide.title}</p><div className="guide-credentials"><span>{guide.licensed ? "✓ MOTAC licensed" : "Licence pending"}</span><span>{guide.yearsExperience}+ years in Ipoh</span></div><p className="guide-bio">{guide.bio}</p><div className="guide-tags">{guide.specialties.map((tag) => <span key={tag}>{tag}</span>)}</div><div className="guide-numbers"><span><strong>{guide.reviews ? `★ ${guide.rating}` : "New"}</strong><small>{guide.reviews} reviews</small></span><span><strong>{guide.tours}</strong><small>Tours</small></span><span><strong>{guide.acceptance}%</strong><small>Accept rate</small></span></div><footer><span>{guide.languages.join(" · ")}</span><div className="guide-card-actions"><button type="button" onClick={() => setSelectedGuide(guide)}>View</button><button type="button" onClick={() => { setGuideError(""); setEditingGuide(guide); }}>Edit</button><button className="delete" type="button" onClick={() => removeGuide(guide)}>Delete</button></div></footer></article>)}</div> : <section className="booking-request-list">{guideBookingRequests.map((booking) => <article className="booking-request" key={booking.id}><div className="request-date"><small>TRIP DATES</small><strong>{booking.date}</strong><span>{booking.guests} guest{booking.guests > 1 ? "s" : ""}</span></div><div className="request-main"><div><span className="booking-id">{booking.id}</span><h3>{booking.packageName}</h3><p>Requested by <strong>{booking.member}</strong> · Assigned to <strong>{booking.guide}</strong></p></div><strong>{money(booking.value)}</strong></div><div className="request-actions"><Status>{bookingStatuses[booking.id]}</Status></div></article>)}</section>}
+    {selectedGuide && <div className="guide-modal-backdrop" onMouseDown={() => setSelectedGuide(null)}><section className="guide-create-modal guide-profile-modal" role="dialog" aria-modal="true" aria-labelledby="guide-profile-title" onMouseDown={(event) => event.stopPropagation()}><header><div><p className="admin-eyebrow">{selectedGuide.id} · Public profile</p><h2 id="guide-profile-title">{selectedGuide.name}</h2></div><button onClick={() => setSelectedGuide(null)} aria-label="Close guide profile">×</button></header><div className="guide-profile-body"><div className="guide-profile-lead"><span className={`guide-avatar large avatar-${selectedGuide.color}`}>{selectedGuide.initials}</span><div><p className="guide-title">{selectedGuide.title}</p><div className="guide-credentials"><span>{selectedGuide.licensed ? "✓ MOTAC licensed guide" : "Licence pending"}</span><span>{selectedGuide.yearsExperience}+ years guiding Ipoh</span></div></div><Status>{selectedGuide.status}</Status></div><section><small>BIODATA</small><p>{selectedGuide.bio}</p></section><section><small>SPECIALIZES IN</small><p>{selectedGuide.expertise}</p></section><section><small>SPECIAL ACCESS & PERKS</small><ul>{selectedGuide.perks.map((perk) => <li key={perk}>✓ {perk}</li>)}</ul></section><div className="guide-profile-columns"><section><small>LANGUAGES</small><p>{selectedGuide.languages.join(" · ")}</p></section><section><small>SPECIALTIES</small><div className="guide-tags">{selectedGuide.specialties.map((tag) => <span key={tag}>{tag}</span>)}</div></section></div><section><small>GUEST TESTIMONIALS</small>{selectedGuide.testimonials.length ? selectedGuide.testimonials.map((testimonial) => <blockquote key={testimonial.guest}>“{testimonial.quote}”<cite>— {testimonial.guest}</cite></blockquote>) : <p>No testimonials yet.</p>}</section><div className="guide-numbers"><span><strong>{selectedGuide.reviews ? `★ ${selectedGuide.rating}` : "New"}</strong><small>{selectedGuide.reviews} reviews</small></span><span><strong>{selectedGuide.tours}</strong><small>Tours</small></span><span><strong>{selectedGuide.acceptance}%</strong><small>Accept rate</small></span></div></div></section></div>}
+    {editingGuide && <div className="guide-modal-backdrop" onMouseDown={() => !savingGuide && setEditingGuide(null)}><section className="guide-create-modal" role="dialog" aria-modal="true" aria-labelledby="edit-guide-title" onMouseDown={(event) => event.stopPropagation()}><header><div><p className="admin-eyebrow">{editingGuide.id}</p><h2 id="edit-guide-title">Edit tour guide</h2></div><button disabled={savingGuide} onClick={() => setEditingGuide(null)} aria-label="Close edit guide form">×</button></header><form onSubmit={saveEditedGuide}><div className="guide-form-grid"><label>Full name<input required value={editingGuide.name} onChange={(event) => setEditingGuide({ ...editingGuide, name: event.target.value })} /></label><label>Email address<input type="email" value={editingGuide.email ?? ""} onChange={(event) => setEditingGuide({ ...editingGuide, email: event.target.value })} /></label><label className="form-wide">Guide title<input required value={editingGuide.title} onChange={(event) => setEditingGuide({ ...editingGuide, title: event.target.value })} /></label><label>Years guiding Ipoh<input required min="0" type="number" value={editingGuide.yearsExperience} onChange={(event) => setEditingGuide({ ...editingGuide, yearsExperience: Number(event.target.value) })} /></label><label>Availability<select value={editingGuide.status} onChange={(event) => setEditingGuide({ ...editingGuide, status: event.target.value as TourGuide["status"] })}><option>Available</option><option>On tour</option><option>Off duty</option></select></label><label className="guide-license"><input type="checkbox" checked={editingGuide.licensed} onChange={(event) => setEditingGuide({ ...editingGuide, licensed: event.target.checked })} /><span>MOTAC licensed guide</span></label><label>Languages<input value={editingGuide.languages.join(", ")} onChange={(event) => setEditingGuide({ ...editingGuide, languages: event.target.value.split(",").map((item) => item.trim()) })} /><small>Separate with commas</small></label><label>Support specialties<input value={editingGuide.specialties.join(", ")} onChange={(event) => setEditingGuide({ ...editingGuide, specialties: event.target.value.split(",").map((item) => item.trim()) })} /><small>Separate with commas</small></label><label className="form-wide">Short biodata<textarea rows={3} value={editingGuide.bio} onChange={(event) => setEditingGuide({ ...editingGuide, bio: event.target.value })} /></label><label className="form-wide">Detailed expertise<textarea required rows={3} value={editingGuide.expertise} onChange={(event) => setEditingGuide({ ...editingGuide, expertise: event.target.value })} /></label><label className="form-wide">Special access & perks<textarea rows={3} value={editingGuide.perks.join("\n")} onChange={(event) => setEditingGuide({ ...editingGuide, perks: event.target.value.split("\n") })} /><small>One item per line</small></label>{guideError && <p className="guide-form-error" role="alert">{guideError}</p>}</div><footer><button type="button" disabled={savingGuide} onClick={() => setEditingGuide(null)}>Cancel</button><button className="admin-primary" disabled={savingGuide} type="submit">{savingGuide ? "Saving…" : "Save changes →"}</button></footer></form></section></div>}
+    {showCreate && <div className="guide-modal-backdrop" onMouseDown={() => !savingGuide && setShowCreate(false)}><section className="guide-create-modal" role="dialog" aria-modal="true" aria-labelledby="create-guide-title" onMouseDown={(event) => event.stopPropagation()}><header><div><p className="admin-eyebrow">New team member</p><h2 id="create-guide-title">Create tour guide</h2></div><button disabled={savingGuide} onClick={() => setShowCreate(false)} aria-label="Close create guide form">×</button></header><form onSubmit={createGuide}><div className="guide-form-grid"><label>Full name<input required value={newGuide.name} onChange={(event) => setNewGuide({ ...newGuide, name: event.target.value })} placeholder="e.g. Aina Rahman" /></label><label>Email address<input required type="email" value={newGuide.email} onChange={(event) => setNewGuide({ ...newGuide, email: event.target.value })} placeholder="aina@kaypoh.my" /></label><label className="form-wide">Guide title<input required value={newGuide.title} onChange={(event) => setNewGuide({ ...newGuide, title: event.target.value })} placeholder="e.g. Access-trained heritage companion" /></label><label>Years guiding Ipoh<input required min="0" type="number" value={newGuide.yearsExperience} onChange={(event) => setNewGuide({ ...newGuide, yearsExperience: event.target.value })} /></label><label>Initial availability<select value={newGuide.status} onChange={(event) => setNewGuide({ ...newGuide, status: event.target.value })}><option>Available</option><option>On tour</option><option>Off duty</option></select></label><label className="guide-license"><input type="checkbox" checked={newGuide.licensed} onChange={(event) => setNewGuide({ ...newGuide, licensed: event.target.checked })} /><span>MOTAC licensed guide</span></label><label>Languages<input value={newGuide.languages} onChange={(event) => setNewGuide({ ...newGuide, languages: event.target.value })} /><small>Separate with commas</small></label><label>Support specialties<input value={newGuide.specialties} onChange={(event) => setNewGuide({ ...newGuide, specialties: event.target.value })} /><small>Separate with commas</small></label><label className="form-wide">Short biodata<textarea rows={3} value={newGuide.bio} onChange={(event) => setNewGuide({ ...newGuide, bio: event.target.value })} placeholder="Training, experience, and approach to supporting travellers…" /></label><label className="form-wide">Detailed expertise<textarea required rows={3} value={newGuide.expertise} onChange={(event) => setNewGuide({ ...newGuide, expertise: event.target.value })} placeholder="The Ipoh routes and experiences this guide knows best…" /></label><label className="form-wide">Special access & perks<textarea rows={3} value={newGuide.perks} onChange={(event) => setNewGuide({ ...newGuide, perks: event.target.value })} placeholder={'One perk per line\nReserved venue access\nSpecial equipment provided'} /><small>One item per line. These appear on the public guide profile.</small></label>{guideError && <p className="guide-form-error" role="alert">{guideError}</p>}</div><footer><button type="button" disabled={savingGuide} onClick={() => setShowCreate(false)}>Cancel</button><button className="admin-primary" disabled={savingGuide} type="submit">{savingGuide ? "Saving…" : "Create guide →"}</button></footer></form></section></div>}
   </>;
 }
 
