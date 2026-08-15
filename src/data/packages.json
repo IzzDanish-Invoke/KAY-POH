@@ -1,209 +1,250 @@
 [
   {
-    "id": "kaypoh-plus",
-    "tag": "Most popular · Premium Economy",
+    "id": "kaypoh-normal",
+    "tag": "Classic Ipoh getaway",
     "days": "2D1N",
-    "title": "KAYPOH Plus",
-    "color": "package-gold",
-    "price": 549,
+    "title": "KAYPOH! Normal Package",
+    "color": "package-coral",
+    "price": 800,
     "currency": "RM",
-    "description": "Our core experience with a smaller group, more coordination, slower pacing, and personalised assistance.",
-    "highlights": [
-      "Smaller group",
-      "More assistance",
-      "Accessible stay",
-      "Backup planning"
+    "rates": [
+      { "label": "Local Traveller", "price": 800 },
+      { "label": "International Traveller", "price": 900 }
     ],
+    "description": "A complete two-day Ipoh experience with a curated itinerary, local guide, transport, accommodation, meals and attraction tickets arranged for you.",
+    "highlights": ["Curated 2D1N itinerary", "Local guide", "Transport included", "Stay, meals & tickets"],
     "includes": [
-      "Accessible accommodation",
-      "Dedicated trip companion",
-      "Pre-trip coordination",
-      "Wheelchair-ready transfers"
+      "2D1N Curated Ipoh Itinerary",
+      "Local Tour Guide",
+      "Transportation Throughout the Tour",
+      "Hotel Pickup & Drop-off",
+      "1-Night Accommodation",
+      "Meals Included in the Itinerary",
+      "Attraction Entrance Tickets",
+      "Food, Culture & Nature Experiences",
+      "Trip Planning & Coordination"
     ],
+    "notIncluded": [
+      "Transportation to Ipoh before the tour",
+      "Personal Shopping & Souvenirs",
+      "Meals or activities outside the itinerary",
+      "Personal Travel Insurance",
+      "Additional or upgraded activities requested by guests"
+    ],
+    "notices": ["No additional charges for activities listed in the confirmed itinerary."],
     "accessibility": {
-      "mobility": "Individually reviewed",
-      "pace": "Slower and adjustable",
-      "support": "Personalised assistance",
-      "venue": "Prioritises OKU-run partners"
+      "mobility": "Standard tour route",
+      "pace": "Curated itinerary pace",
+      "support": "Local tour guide",
+      "venue": "Food, culture & nature experiences"
     },
     "itinerary": [
       {
         "day": 1,
         "label": "Day 1",
-        "title": "Eat your way through Ipoh",
+        "title": "Heritage + Food",
         "items": [
-          {
-            "time": "09:30",
-            "activity": "Old Town breakfast crawl",
-            "note": "White coffee, egg tarts, kaya toast, and local conversation."
-          },
-          {
-            "time": "11:30",
-            "activity": "Market with a local",
-            "note": "Meet traders and discover the ingredients behind Perak cooking."
-          },
-          {
-            "time": "13:00",
-            "activity": "Bean sprout chicken lunch",
-            "note": "Try Ipoh’s most debated signature dish at a guide-approved shop."
-          },
-          {
-            "time": "15:00",
-            "activity": "Hotel check-in",
-            "note": "Rest, wander, or follow our self-guided snack map."
-          },
-          {
-            "time": "18:30",
-            "activity": "Night food safari",
-            "note": "A progressive dinner across three neighbourhood institutions."
-          }
+          { "time": "8:00 AM", "activity": "Hotel Pickup", "note": "" },
+          { "time": "8:15 AM", "activity": "Local Breakfast", "note": "" },
+          { "time": "9:30 AM", "activity": "Cave Temple Visit", "note": "" },
+          { "time": "10:30 AM", "activity": "Ipoh Old Town & Mural Walk", "note": "" },
+          { "time": "12:00 PM", "activity": "Signature Ipoh Lunch", "note": "" },
+          { "time": "1:15 PM", "activity": "Concubine Lane", "note": "" },
+          { "time": "2:30 PM", "activity": "Heritage Experience", "note": "" },
+          { "time": "3:45 PM", "activity": "White Coffee Tasting", "note": "" },
+          { "time": "5:00 PM", "activity": "Hotel Drop-off", "note": "" }
         ]
       },
       {
         "day": 2,
         "label": "Day 2",
-        "title": "Makers, coffee & keepsakes",
+        "title": "Nature + Souvenir",
         "items": [
-          {
-            "time": "08:30",
-            "activity": "Dim sum morning",
-            "note": "Share baskets of Ipoh favourites in a lively local restaurant."
-          },
-          {
-            "time": "10:30",
-            "activity": "White coffee workshop",
-            "note": "Learn how Ipoh’s iconic roast is made and blend your own cup."
-          },
-          {
-            "time": "12:30",
-            "activity": "Farewell lunch",
-            "note": "One final local meal before station drop-off."
-          }
+          { "time": "8:30 AM", "activity": "Hotel Pickup", "note": "" },
+          { "time": "9:00 AM", "activity": "Tasik Cermin", "note": "" },
+          { "time": "11:15 AM", "activity": "Limestone / Cave Stop", "note": "" },
+          { "time": "12:15 PM", "activity": "Local Lunch", "note": "" },
+          { "time": "1:45 PM", "activity": "Kellie’s Castle", "note": "" },
+          { "time": "3:30 PM", "activity": "Kampung / Local-Life Experience", "note": "" },
+          { "time": "4:30 PM", "activity": "Souvenir Shopping", "note": "" },
+          { "time": "5:00 PM", "activity": "Hotel Drop-off", "note": "" }
         ]
       }
     ],
     "published": true
   },
   {
-    "id": "kaypoh-private",
-    "tag": "Highest flexibility",
-    "days": "Private",
-    "title": "KAYPOH Private",
+    "id": "kaypoh-oku",
+    "tag": "Personalised accessible support",
+    "days": "2D1N",
+    "title": "KAYPOH! OKU Package",
+    "color": "package-gold",
+    "price": 850,
+    "currency": "RM",
+    "rates": [
+      { "label": "Local OKU Final Price", "price": 850, "note": "RM950 standard rate less RM100 Local OKU Support Rebate. Available for eligible Malaysian OKU travellers." },
+      { "label": "International OKU", "price": 1050 },
+      { "label": "Caregiver / Companion", "price": 650, "note": "Includes tour transport, one-night accommodation, itinerary meals, entrance tickets and scheduled tour activities." }
+    ],
+    "description": "A personalised Ipoh getaway with a pre-trip needs assessment, accessibility-conscious planning, support crew and a flexible, more comfortable pace.",
+    "highlights": ["RM100 local OKU rebate", "Pre-trip needs assessment", "Support crew assistance", "Flexible pace & rest stops"],
+    "includes": [
+      "Personalised 2D1N Ipoh Itinerary",
+      "Pre-Trip Needs Assessment",
+      "Local Tour Guide",
+      "KAYPOH! Support Crew Assistance",
+      "Accessible-Friendly Transportation",
+      "Hotel Pickup & Drop-off",
+      "1-Night Suitable Accommodation",
+      "Meals Included in the Itinerary",
+      "Dietary Coordination",
+      "Attraction Entrance Tickets",
+      "Accessibility-Conscious Route Planning",
+      "Shorter & More Comfortable Routes",
+      "Flexible Travel Pace",
+      "Scheduled Rest Stops",
+      "Backup Venue Planning"
+    ],
+    "notIncluded": [
+      "Transportation to Ipoh before the tour",
+      "Personal Caregiver / Personal Assistant",
+      "Medical or nursing assistance",
+      "Personal medical equipment",
+      "Personal Shopping & Souvenirs",
+      "Personal Travel Insurance",
+      "Specialised accessibility equipment or services requested separately",
+      "Activities or meals outside the confirmed itinerary"
+    ],
+    "notices": [
+      "No additional accessibility fee will be charged for the standard support included in the confirmed package.",
+      "If specialised equipment, dedicated 1-to-1 assistance or arrangements outside the standard package are required, KAYPOH! will confirm the additional cost before booking confirmation."
+    ],
+    "accessibility": {
+      "mobility": "Individually assessed",
+      "pace": "Shorter, flexible routes",
+      "support": "Guide + KAYPOH! support crew",
+      "venue": "Accessibility-conscious backup planning"
+    },
+    "itinerary": [
+      {
+        "day": 1,
+        "label": "Day 1",
+        "title": "Heritage + Food",
+        "items": [
+          { "time": "8:30 AM", "activity": "Hotel Pickup & Needs Check", "note": "" },
+          { "time": "9:00 AM", "activity": "Local Breakfast", "note": "" },
+          { "time": "10:00 AM", "activity": "Ipoh Old Town", "note": "" },
+          { "time": "10:45 AM", "activity": "Short Mural Art Walk", "note": "" },
+          { "time": "11:30 AM", "activity": "Rest & Refreshment Break", "note": "" },
+          { "time": "12:30 PM", "activity": "Local Lunch", "note": "" },
+          { "time": "2:00 PM", "activity": "Concubine Lane", "note": "" },
+          { "time": "3:00 PM", "activity": "Rest Break", "note": "" },
+          { "time": "3:30 PM", "activity": "White Coffee Tasting", "note": "" },
+          { "time": "4:30 PM", "activity": "Hotel Drop-off", "note": "" }
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Day 2",
+        "title": "Nature + Souvenir",
+        "items": [
+          { "time": "8:30 AM", "activity": "Hotel Pickup", "note": "" },
+          { "time": "9:00 AM", "activity": "Tasik Cermin Scenic Visit", "note": "" },
+          { "time": "10:30 AM", "activity": "Rest Break", "note": "" },
+          { "time": "11:00 AM", "activity": "Scenic / Accessible Nature Stop", "note": "" },
+          { "time": "12:30 PM", "activity": "Local Lunch", "note": "" },
+          { "time": "2:00 PM", "activity": "Heritage / Photo Stop", "note": "" },
+          { "time": "3:00 PM", "activity": "Rest & Refreshment Break", "note": "" },
+          { "time": "3:30 PM", "activity": "Souvenir Shopping", "note": "" },
+          { "time": "4:30 PM", "activity": "Hotel Drop-off", "note": "" }
+        ]
+      }
+    ],
+    "published": true
+  },
+  {
+    "id": "kaypoh-oku-group",
+    "tag": "Minimum 10 participants",
+    "days": "2D1N",
+    "title": "KAYPOH! OKU Group Package",
     "color": "package-sage",
-    "price": 899,
+    "price": 780,
     "currency": "RM",
-    "description": "For individuals, families, or small groups needing a custom itinerary and dedicated end-to-end support.",
-    "highlights": [
-      "Private group",
-      "Custom itinerary",
-      "Dedicated support",
-      "Flexible timing"
+    "rates": [
+      { "label": "Local", "price": 780, "note": "Minimum 10 participants." },
+      { "label": "International", "price": 880, "note": "Minimum 10 participants." },
+      { "label": "Caregiver / Companion", "price": 650 }
     ],
+    "description": "A coordinated 2D1N Ipoh group experience with accessible-conscious route planning, planned meals, clear meeting points and dedicated support crew.",
+    "highlights": ["Minimum 10 participants", "Group briefing", "Guide + support crew", "Rest stops & headcounts"],
     "includes": [
-      "Individual access plan",
-      "Private trip companion",
-      "Personal transport plan",
-      "Contingency planning"
+      "2D1N Group Ipoh Itinerary",
+      "Pre-Trip Group Briefing",
+      "Local Tour Guide",
+      "KAYPOH! Support Crew",
+      "Group Transportation Throughout the Tour",
+      "Pickup & Return Drop-off",
+      "1-Night Accommodation",
+      "Planned Group Meals",
+      "Attraction Entrance Tickets",
+      "Accessibility-Conscious Route Planning",
+      "Scheduled Rest Stops",
+      "Clear Meeting Points",
+      "Group Coordination & Headcount"
     ],
+    "notIncluded": [
+      "Transportation to Ipoh before the tour, unless agreed as the group pickup point",
+      "Personal 1-to-1 Caregiver",
+      "Medical or Nursing Assistance",
+      "Personal Medical / Accessibility Equipment",
+      "Personal Shopping & Souvenirs",
+      "Personal Travel Insurance",
+      "Activities or meals outside the confirmed itinerary",
+      "Additional support crew beyond the agreed package requirement"
+    ],
+    "notices": ["If additional support crew, specialised transportation or accessibility arrangements are required, the cost will be quoted and agreed upon before booking confirmation."],
+    "supportArrangement": "10–15 Participants: 1 Local Tour Guide + 2 KAYPOH! Support Crew",
     "accessibility": {
-      "mobility": "Planned individually",
-      "pace": "Fully flexible",
-      "support": "Dedicated support",
-      "venue": "Custom verified partners"
+      "mobility": "Group needs reviewed in advance",
+      "pace": "Planned rest stops",
+      "support": "Guide + two support crew for 10–15 guests",
+      "venue": "Clear meeting points & backup planning"
     },
     "itinerary": [
       {
         "day": 1,
         "label": "Day 1",
-        "title": "The city and its stories",
+        "title": "Heritage + Food",
         "items": [
-          {
-            "time": "10:00",
-            "activity": "Station welcome",
-            "note": "Private transfer, luggage drop, and an introduction to Ipoh."
-          },
-          {
-            "time": "11:00",
-            "activity": "Heritage discovery",
-            "note": "Colonial landmarks, murals, laneways, and local legends."
-          },
-          {
-            "time": "14:30",
-            "activity": "Hotel check-in",
-            "note": "A relaxed afternoon before dinner with your guide."
-          }
+          { "time": "8:00 AM", "activity": "Group Pickup & Briefing", "note": "" },
+          { "time": "8:30 AM", "activity": "Local Breakfast", "note": "" },
+          { "time": "9:45 AM", "activity": "Ipoh Old Town", "note": "" },
+          { "time": "10:30 AM", "activity": "Mural Art Walk", "note": "" },
+          { "time": "11:30 AM", "activity": "Group Rest Break", "note": "" },
+          { "time": "12:30 PM", "activity": "Group Lunch", "note": "" },
+          { "time": "2:00 PM", "activity": "Concubine Lane", "note": "" },
+          { "time": "3:00 PM", "activity": "Coffee & Dessert Stop", "note": "" },
+          { "time": "4:00 PM", "activity": "Free & Easy / Group Photo", "note": "" },
+          { "time": "4:30 PM", "activity": "Headcount & Hotel Drop-off", "note": "" }
         ]
       },
       {
         "day": 2,
         "label": "Day 2",
-        "title": "Beyond the city",
+        "title": "Nature + Souvenir",
         "items": [
-          {
-            "time": "08:30",
-            "activity": "Gopeng countryside",
-            "note": "Scenic drive through kampungs and dramatic karst landscapes."
-          },
-          {
-            "time": "10:00",
-            "activity": "Gua Tempurung",
-            "note": "A guided dry cave experience suitable for first-time explorers."
-          },
-          {
-            "time": "13:00",
-            "activity": "Riverside lunch",
-            "note": "A leisurely local meal surrounded by greenery."
-          },
-          {
-            "time": "15:00",
-            "activity": "Kellie’s Castle",
-            "note": "Explore Perak’s most curious unfinished mansion."
-          }
-        ]
-      },
-      {
-        "day": 3,
-        "label": "Day 3",
-        "title": "Temples & a slow goodbye",
-        "items": [
-          {
-            "time": "08:30",
-            "activity": "Cave temple trail",
-            "note": "Visit Perak Tong and a quieter guide-selected sanctuary."
-          },
-          {
-            "time": "11:30",
-            "activity": "Coffee and keepsakes",
-            "note": "Free time for coffee, biscuits, and last-minute shopping."
-          },
-          {
-            "time": "13:00",
-            "activity": "Departure transfer",
-            "note": "Drop-off at your next Ipoh connection."
-          }
+          { "time": "8:00 AM", "activity": "Group Pickup & Headcount", "note": "" },
+          { "time": "8:30 AM", "activity": "Tasik Cermin", "note": "" },
+          { "time": "10:30 AM", "activity": "Rest & Refreshment Break", "note": "" },
+          { "time": "11:00 AM", "activity": "Scenic Nature Stop", "note": "" },
+          { "time": "12:30 PM", "activity": "Group Lunch", "note": "" },
+          { "time": "2:00 PM", "activity": "Kellie’s Castle / Heritage Stop", "note": "" },
+          { "time": "3:30 PM", "activity": "Souvenir Shopping", "note": "" },
+          { "time": "4:15 PM", "activity": "Group Photo & Final Headcount", "note": "" },
+          { "time": "4:30 PM", "activity": "Return Transfer", "note": "" }
         ]
       }
     ],
-    "published": true
-  },
-  {
-    "id": "untitled-package",
-    "tag": "New accessible package",
-    "days": "2D1N",
-    "title": "Untitled package",
-    "color": "package-gold",
-    "price": 0,
-    "currency": "RM",
-    "description": "",
-    "highlights": [],
-    "includes": [],
-    "accessibility": {
-      "mobility": "",
-      "pace": "",
-      "support": "",
-      "venue": ""
-    },
-    "itinerary": [],
     "published": true
   }
 ]
