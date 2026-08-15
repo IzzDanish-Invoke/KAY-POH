@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import PackageExplorer from "@/components/PackageExplorer";
-import { experiences, matchingQuestions } from "@/data/data";
+import MatchForm from "@/components/MatchForm";
+import TourGuides from "@/components/TourGuides";
+import { experiences } from "@/data/data";
 
 function ArrowIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>;
@@ -14,7 +16,7 @@ export default function Home() {
         <nav className="nav shell" aria-label="Main navigation">
           <a className="brand brand-logo" href="#home" aria-label="Kay Poh home"><Image src="/brand/kaypoh-dark-outline.png" alt="Kay Poh" width={105} height={94} priority /></a>
           <div className="nav-links">
-            <a href="#packages">Packages</a><a href="#experiences">Experiences</a><a href="#about">Our story</a>
+            <a href="#packages">Packages</a><a href="#experiences">Experiences</a><a href="#guides">Guides</a><a href="#about">Our story</a>
           </div>
           <div className="nav-actions">
             <Link className="login-link" href="/login"><span className="login-icon">↳</span> Login</Link>
@@ -45,10 +47,7 @@ export default function Home() {
       <section className="matcher" id="match">
         <div className="shell matcher-inner">
           <div className="matcher-copy"><p className="eyebrow light"><span /> Start here</p><h2>What kind of <em>kay poh</em> are you?</h2><p>Tell us a little about your trip and we’ll point you to the right Ipoh experience.</p></div>
-          <form className="match-form" action="#packages">
-            {matchingQuestions.map((question) => <label key={question.id}>{question.label}<select name={question.id} defaultValue={question.defaultValue}>{question.options.map((option) => <option key={option}>{option}</option>)}</select></label>)}
-            <button className="match-button" type="submit">Match me with a trip <ArrowIcon /></button>
-          </form>
+          <MatchForm />
         </div>
       </section>
 
@@ -70,6 +69,8 @@ export default function Home() {
           {experiences.map((tour) => <article className={`tour-card ${tour.color}`} key={tour.id}><div className="card-top"><span>{tour.number}</span><span className="mini-arrow">↗</span></div><div className="card-pattern" aria-hidden="true"><i /><i /><i /></div><h3>{tour.title}</h3><p>{tour.description}</p><footer><span>{tour.duration} · From {tour.currency}{tour.price}</span><Link href="/booking">Book ↗</Link></footer></article>)}
         </div>
       </section>
+
+      <TourGuides />
 
       <section className="steps">
         <div className="shell"><div className="steps-heading"><p className="eyebrow"><span /> Easy from hello to Ipoh</p><h2>Three steps.<br /><em>Zero travel stress.</em></h2></div>

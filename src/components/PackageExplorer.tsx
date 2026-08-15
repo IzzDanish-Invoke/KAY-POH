@@ -21,7 +21,7 @@ export default function PackageExplorer() {
     <>
       <div className="package-grid">
         {packages.map((item) => (
-          <article className={`package-card ${item.color}`} key={item.title}>
+          <article className={`package-card ${item.color}`} id={item.id} key={item.title}>
             <div className="package-visual"><span className="package-tag">{item.tag}</span><strong>{item.days}</strong><div className="package-landscape"><i /><i /><i /></div></div>
             <div className="package-body"><p className="package-kicker">Curated getaway</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map((highlight) => <li key={highlight}>✓ {highlight}</li>)}</ul><div className="package-price"><span>From <strong>{item.currency}{item.price}</strong> / person</span><button onClick={() => setSelected(item)}>View itinerary ↗</button></div></div>
           </article>

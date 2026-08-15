@@ -124,10 +124,56 @@ export const members = [
 ];
 
 export const tourGuides = [
-  { id: "KP-G001", name: "Mei Ling Tan", initials: "ML", title: "Heritage storyteller", bio: "Ipoh-born history lover with a gift for bringing old streets and family stories to life.", languages: ["English", "Mandarin", "Malay"], specialties: ["Heritage", "Food"], rating: 4.95, reviews: 128, tours: 214, acceptance: 96, status: "Available", color: "orange" },
-  { id: "KP-G002", name: "Arif Rahman", initials: "AR", title: "Nature & cave explorer", bio: "Outdoor guide and amateur geologist who knows Perak’s limestone landscape inside out.", languages: ["English", "Malay"], specialties: ["Nature", "Adventure"], rating: 4.89, reviews: 94, tours: 167, acceptance: 91, status: "On tour", color: "aqua" },
-  { id: "KP-G003", name: "Uncle Chan", initials: "UC", title: "Ipoh food insider", bio: "Retired chef, lifelong Ipoh resident, and firm believer that every good story starts over coffee.", languages: ["Cantonese", "English", "Malay"], specialties: ["Food", "Culture"], rating: 4.98, reviews: 176, tours: 289, acceptance: 98, status: "Available", color: "red" },
-  { id: "KP-G004", name: "Priya Nair", initials: "PN", title: "Culture & family guide", bio: "A patient, energetic guide who creates thoughtful experiences for families and young travellers.", languages: ["English", "Tamil", "Malay"], specialties: ["Family", "Culture"], rating: 4.84, reviews: 72, tours: 121, acceptance: 88, status: "Off duty", color: "blue" },
+  {
+    id: "KP-G001", name: "Mei Ling Tan", initials: "ML", title: "Heritage storyteller",
+    bio: "Ipoh-born history lover with a gift for bringing old streets and family stories to life.",
+    languages: ["English", "Mandarin", "Malay"], specialties: ["Heritage", "Food"],
+    rating: 4.95, reviews: 128, tours: 214, acceptance: 96, status: "Available", color: "orange",
+    licensed: true, yearsExperience: 9,
+    expertise: "Heritage walking tours and street-food crawls through Old Town Ipoh.",
+    perks: ["Skip-the-line entry at Sam Poh Tong", "Introductions to three generations of shopkeepers on Concubine Lane"],
+    testimonials: [
+      { quote: "Mei Ling turned a two-hour walk into the highlight of our trip — she remembers every family story on every street.", guest: "Sarah, Australia" },
+      { quote: "Punctual, funny, and clearly loves what she does.", guest: "Daniel, Singapore" },
+    ],
+  },
+  {
+    id: "KP-G002", name: "Arif Rahman", initials: "AR", title: "Nature & cave explorer",
+    bio: "Outdoor guide and amateur geologist who knows Perak’s limestone landscape inside out.",
+    languages: ["English", "Malay"], specialties: ["Nature", "Adventure"],
+    rating: 4.89, reviews: 94, tours: 167, acceptance: 91, status: "On tour", color: "aqua",
+    licensed: true, yearsExperience: 7,
+    expertise: "Limestone cave systems and countryside trekking around Gopeng and Gunung Lang.",
+    perks: ["Access to a trail not listed on public maps", "Caving gear provided at no extra cost"],
+    testimonials: [
+      { quote: "Arif knows every cave system like the back of his hand — genuinely felt like an expedition, not a tour.", guest: "Marco, Italy" },
+    ],
+  },
+  {
+    id: "KP-G003", name: "Uncle Chan", initials: "UC", title: "Ipoh food insider",
+    bio: "Retired chef, lifelong Ipoh resident, and firm believer that every good story starts over coffee.",
+    languages: ["Cantonese", "English", "Malay"], specialties: ["Food", "Culture"],
+    rating: 4.98, reviews: 176, tours: 289, acceptance: 98, status: "Available", color: "red",
+    licensed: true, yearsExperience: 15,
+    expertise: "Old-school hawker trails and the stories behind Ipoh’s most-argued-over dishes.",
+    perks: ["Reserved seating at a no-reservations noodle shop", "Tastings at a coffee roastery closed to walk-ins"],
+    testimonials: [
+      { quote: "Uncle Chan is a local legend — every stall owner greeted him by name.", guest: "Priya, UK" },
+      { quote: "Hilarious, warm, and the bean sprout chicken recommendation alone was worth it.", guest: "Wei Jian, KL" },
+    ],
+  },
+  {
+    id: "KP-G004", name: "Priya Nair", initials: "PN", title: "Culture & family guide",
+    bio: "A patient, energetic guide who creates thoughtful experiences for families and young travellers.",
+    languages: ["English", "Tamil", "Malay"], specialties: ["Family", "Culture"],
+    rating: 4.84, reviews: 72, tours: 121, acceptance: 88, status: "Off duty", color: "blue",
+    licensed: true, yearsExperience: 6,
+    expertise: "Family-paced culture walks and gentle sightseeing for travellers with young children.",
+    perks: ["Kid-friendly pacing with built-in rest stops", "Hands-on craft demo with a local artisan"],
+    testimonials: [
+      { quote: "Endlessly patient with our kids and still made it interesting for the adults.", guest: "The Tan family, KL" },
+    ],
+  },
 ];
 
 export const guideBookingRequests = [
