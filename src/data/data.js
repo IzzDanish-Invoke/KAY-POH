@@ -105,10 +105,6 @@ export const experiences = [
 ];
 
 export const matchingQuestions = [
-  { id: "duration", label: "How long?", defaultValue: "2D1N", options: ["Day trip", "2D1N", "3D2N", "4+ days"] },
-  { id: "group", label: "Who’s coming?", defaultValue: "A couple", options: ["Solo traveller", "A couple", "Family", "Friends", "Corporate group"] },
-  { id: "interest", label: "Your travel mood", defaultValue: "A little of everything", options: ["A little of everything", "Food, please", "Culture & heritage", "Nature & adventure", "Easy and relaxing"] },
-  { id: "budget", label: "Budget per person", defaultValue: "RM300–500", options: ["Below RM300", "RM300–500", "RM500–800", "RM800+"] },
   { id: "support", label: "Support needed", defaultValue: "Tell us during booking", options: ["Tell us during booking", "Wheelchair access", "Low-vision support", "Deaf / hard-of-hearing support", "Neurodiversity-friendly pace", "Personal care companion"] },
 ];
 

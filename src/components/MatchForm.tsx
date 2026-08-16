@@ -91,6 +91,7 @@ export default function MatchForm() {
   const [participants, setParticipants] = useState<Participant[]>([
     emptyParticipant(`${idPrefix}-1`),
   ]);
+  const [attendeeCount, setAttendeeCount] = useState(1);
   const [selectedPlanId, setSelectedPlanId] = useState(DEFAULT_PLAN_ID);
   const [selectedGuideId, setSelectedGuideId] = useState(DEFAULT_GUIDE_ID);
   const [showBookingDetails, setShowBookingDetails] = useState(false);
@@ -132,23 +133,24 @@ export default function MatchForm() {
   const groupIsBelowMinimum =
     travellerType === "disabled-group" && participants.length < MIN_GROUP_SIZE;
 
+  const selectedPackage = packages.find((item) => item.id === selectedPlanId);
+  const guestCount = travellerType === "disabled-group" ? participants.length : travellerType === "disabled-person" ? (buddyOption === "with" ? 2 : 1) : attendeeCount;
+  const preferredRate = selectedPackage?.rates.find((rate) => travellerType === "disabled-person" ? rate.label.includes("OKU Final") : travellerType === "disabled-group" ? rate.label === "Local" : rate.label === "Local Traveller") ?? selectedPackage?.rates[0];
+  const totalPrice = (preferredRate?.price ?? selectedPackage?.price ?? 0) * guestCount;
+
   const handleContinue = () => setShowBookingDetails(true);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const selectedPackage = packages.find((item) => item.id === selectedPlanId);
     const selectedGuide = tourGuides.find((item) => item.id === selectedGuideId);
     if (!selectedPackage || !selectedGuide || !startDate) { setBookingError("Please choose a package, guide, and preferred date."); return; }
-    const groupPreference = String(form.get("group") ?? "");
-    const guestCount = travellerType === "disabled-group" ? participants.length : travellerType === "disabled-person" ? (buddyOption === "with" ? 2 : 1) : ({ "Solo traveller": 1, "A couple": 2, Family: 4, Friends: 4, "Corporate group": 10 }[groupPreference] ?? 1);
     const lead = travellerType === "disabled-group" ? { name: `${participants[0]?.firstName ?? ""} ${participants[0]?.lastName ?? ""}`.trim(), email: participants[0]?.email ?? "", contact: `${participants[0]?.countryCode ?? ""} ${participants[0]?.contact ?? ""}`.trim() } : { name: `${form.get("firstName") ?? ""} ${form.get("lastName") ?? ""}`.trim(), email: String(form.get("email") ?? ""), contact: `${form.get("countryCode") ?? ""} ${form.get("contact") ?? ""}`.trim() };
-    const preferredRate = selectedPackage.rates.find((rate) => travellerType === "disabled-person" ? rate.label.includes("OKU Final") : travellerType === "disabled-group" ? rate.label === "Local" : rate.label === "Local Traveller") ?? selectedPackage.rates[0];
     const preferences = Object.fromEntries(matchingQuestions.map((question) => [question.id, String(form.get(question.id) ?? question.defaultValue)]));
     const supportNeeds = travellerType === "tourist" ? [] : travellerType === "disabled-person" ? [disabilityType, buddyOption === "with" ? "Travelling with a buddy" : "Travelling without a buddy"] : [...new Set(participants.map((item) => groupDisabilityMode === "same" ? groupDisabilityType : item.disabilityType))];
     setSubmitting(true); setBookingError("");
     try {
-      const response = await fetch("/api/bookings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ member: lead.name, email: lead.email, contact: lead.contact, identityDocument: travellerType === "disabled-group" ? participants[0]?.icNumber : String(form.get("icNumber") ?? ""), packageId: selectedPackage.id, packageName: selectedPackage.title, guideId: selectedGuide.id, guide: selectedGuide.name, startDate, guests: guestCount, value: (preferredRate?.price ?? selectedPackage.price) * guestCount, rateLabel: preferredRate?.label ?? "Standard rate", addOns: [], supportNeeds, supportNotes: `Landing-page match: ${Object.values(preferences).join(" · ")}`, travellerType, preferences, participants: travellerType === "disabled-group" ? participants.map((item) => ({ name: `${item.firstName} ${item.lastName}`.trim(), email: item.email, contact: `${item.countryCode} ${item.contact}`.trim(), identityDocument: item.icNumber, disabilityType: groupDisabilityMode === "same" ? groupDisabilityType : item.disabilityType })) : [] }) });
+      const response = await fetch("/api/bookings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ member: lead.name, email: lead.email, contact: lead.contact, identityDocument: travellerType === "disabled-group" ? participants[0]?.icNumber : String(form.get("icNumber") ?? ""), packageId: selectedPackage.id, packageName: selectedPackage.title, guideId: selectedGuide.id, guide: selectedGuide.name, startDate, guests: guestCount, value: totalPrice, rateLabel: preferredRate?.label ?? "Standard rate", addOns: [], supportNeeds, supportNotes: `Landing-page match: ${attendeeCount} ${attendeeCount === 1 ? "person" : "persons"} · ${Object.values(preferences).join(" · ")}`, travellerType, preferences, participants: travellerType === "disabled-group" ? participants.map((item) => ({ name: `${item.firstName} ${item.lastName}`.trim(), email: item.email, contact: `${item.countryCode} ${item.contact}`.trim(), identityDocument: item.icNumber, disabilityType: groupDisabilityMode === "same" ? groupDisabilityType : item.disabilityType })) : [] }) });
       const result = await response.json() as Booking | { error?: string };
       if (!response.ok) throw new Error("error" in result ? result.error : "Unable to create booking.");
       setBookingConfirmed(result as Booking);
@@ -179,16 +181,33 @@ export default function MatchForm() {
         </div>
       </div>
 
-      {matchingQuestions.map((question) => (
-        <label key={question.id}>
-          {question.label}
-          <select name={question.id} defaultValue={question.defaultValue}>
-            {question.options.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
-        </label>
-      ))}
+      {travellerType !== "disabled-group" && (
+        <div className="attendee-field">
+          <span className="field-label">Who&apos;s coming?</span>
+          <div className="attendee-stepper" role="group" aria-label="Number of persons">
+            <button
+              type="button"
+              className="attendee-btn"
+              onClick={() => setAttendeeCount((count) => Math.max(1, count - 1))}
+              disabled={attendeeCount <= 1}
+              aria-label="Decrease number of persons"
+            >
+              −
+            </button>
+            <span className="attendee-count" aria-live="polite">
+              {attendeeCount} {attendeeCount === 1 ? "person" : "persons"}
+            </span>
+            <button
+              type="button"
+              className="attendee-btn"
+              onClick={() => setAttendeeCount((count) => count + 1)}
+              aria-label="Increase number of persons"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="plan-field">
         <span className="field-label">Choose a plan</span>
@@ -227,6 +246,18 @@ export default function MatchForm() {
           </a>
         </div>
       </div>
+
+      {travellerType !== "tourist" &&
+        matchingQuestions.map((question) => (
+          <label key={question.id}>
+            {question.label}
+            <select name={question.id} defaultValue={question.defaultValue}>
+              {question.options.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+        ))}
 
       {travellerType === "disabled-person" && (
         <div className="buddy-field">
@@ -480,6 +511,13 @@ export default function MatchForm() {
                 participants listed before matching.
               </p>
             )}
+            <div className="total-price">
+              <span>Total estimate</span>
+              <strong>
+                {selectedPackage?.currency ?? "RM"}
+                {totalPrice.toLocaleString("en-MY")}
+              </strong>
+            </div>
             <button
               className="match-button"
               type="submit"
@@ -539,6 +577,13 @@ export default function MatchForm() {
                   />
                 </div>
               </label>
+            </div>
+            <div className="total-price">
+              <span>Total estimate</span>
+              <strong>
+                {selectedPackage?.currency ?? "RM"}
+                {totalPrice.toLocaleString("en-MY")}
+              </strong>
             </div>
             <button className="match-button" type="submit" disabled={submitting || !startDate}>
               {submitting ? "Sending request…" : "Request booking"} <ArrowIcon />

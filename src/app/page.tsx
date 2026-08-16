@@ -22,6 +22,15 @@ export default function Home() {
   return (
     <main>
       <section className="hero" id="home">
+        <Image
+          src="/pictures/hero-pic.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="hero-bg"
+        />
+        <div className="hero-bg-overlay" aria-hidden="true" />
         <nav className="nav shell" aria-label="Main navigation">
           <a
             className="brand brand-logo"
@@ -75,34 +84,6 @@ export default function Home() {
               <span>✓ Access checked</span>
               <span>✓ Support included</span>
               <span>✓ OKU-led partners</span>
-            </div>
-          </div>
-          <div
-            className="hero-art"
-            aria-label="Illustration of Ipoh's limestone hills and heritage town"
-          >
-            <div className="sun" />
-            <div className="cloud cloud-one" />
-            <div className="cloud cloud-two" />
-            <div className="hill hill-back" />
-            <div className="hill hill-front" />
-            <div className="shop shop-one">
-              <span>怡保</span>
-            </div>
-            <div className="shop shop-two">
-              <span>KOPI</span>
-            </div>
-            <div className="shop shop-three" />
-            <div className="road" />
-            <div className="scooter">
-              ●<i />◉
-            </div>
-            <div className="postcard-note">
-              Travel with
-              <br />
-              confidence,
-              <br />
-              not compromise.
             </div>
           </div>
         </div>
