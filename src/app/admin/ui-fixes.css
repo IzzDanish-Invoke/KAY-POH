@@ -6,6 +6,95 @@
   box-sizing: border-box;
 }
 
+/* Mobile admin workspace: kept as additive overrides to avoid coupling to module styles. */
+@media (max-width: 760px) {
+  .admin-sidebar {
+    width: min(86vw, 320px);
+    overflow-y: auto;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .admin-sidebar nav { padding-block: 16px; }
+  .admin-sidebar nav button,
+  .sidebar-bottom > a { min-height: 44px; }
+
+  .admin-topbar {
+    min-height: 78px;
+    height: auto;
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: 8px;
+  }
+
+  .role-switch { display: flex; flex-shrink: 0; }
+  .topbar-actions .role-switch button {
+    min-width: 52px;
+    min-height: 38px;
+    padding: 7px 9px;
+    font-size: 9px;
+  }
+
+  .admin-main { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  .request-date { padding: 16px; }
+  .request-actions button { min-height: 42px; flex: 1 1 120px; }
+  .module-actions button { min-height: 40px; }
+  .table-tools > button { min-height: 42px; }
+
+  .live-tour-tabs,
+  .live-day-tabs,
+  .module-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .live-tour-tabs button,
+  .live-day-tabs button,
+  .module-tabs button { scroll-snap-align: start; }
+  .live-tour-facts strong,
+  .live-tour-facts small { overflow-wrap: anywhere; }
+
+  .table-scroll,
+  .data-table-card {
+    max-width: calc(100vw - 30px);
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .guide-create-modal,
+  .guide-profile-modal,
+  .responses-modal,
+  .admin-confirm-modal { width: 100%; max-width: 100%; }
+}
+
+@media (max-width: 520px) {
+  .admin-topbar { padding-inline: 10px; gap: 7px; }
+  .mobile-menu { width: 38px; min-width: 38px; height: 44px; padding: 0; }
+  .admin-topbar > div:first-of-type { flex: 1 1 auto; min-width: 0; }
+  .admin-topbar h1 { max-width: none; font-size: 17px; }
+  .topbar-actions > button,
+  .topbar-actions > span { display: none; }
+  .topbar-actions .role-switch button { min-width: 48px; padding-inline: 6px; font-size: 8px; }
+  .admin-main { padding-inline: 10px; }
+
+  .admin-section-head h2,
+  .admin-welcome h2 { font-size: 27px; }
+  .admin-card > header { align-items: flex-start; gap: 10px; padding: 16px; }
+  .admin-card > header button { flex: 0 0 auto; }
+  .live-tour-tabs button { min-width: min(82vw, 270px); }
+  .live-day-tabs button { min-width: 160px; }
+  .live-tour-facts { grid-template-columns: 1fr; }
+
+  .qr-backdrop,
+  .responses-backdrop,
+  .guide-modal-backdrop,
+  .admin-confirm-backdrop { padding: 6px; }
+  .qr-modal { max-height: calc(100dvh - 12px); }
+  .qr-image { width: min(210px, 70vw); height: min(210px, 70vw); }
+  .responses-fab { bottom: calc(12px + env(safe-area-inset-bottom)); }
+}
+
 .module-actions button.view-module-reviews {
   background: var(--orange);
   color: var(--ink);
@@ -119,6 +208,7 @@
 
 .guide-card .guide-numbers {
   margin-top: auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .guide-card footer {
@@ -329,6 +419,16 @@
     font-size: 13px;
   }
 
+  .guide-card .guide-numbers,
+  .guide-profile-modal .guide-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .guide-card .guide-numbers span:nth-child(3),
+  .guide-profile-modal .guide-numbers span:nth-child(3) {
+    border-left: 0;
+  }
+
   .guide-card footer {
     align-items: flex-start;
     flex-direction: column;
@@ -373,5 +473,19 @@
 
   .responses-modal > footer button {
     width: 100%;
+  }
+}
+
+/* Final phone-header overrides must follow the existing responsive rules above. */
+@media (max-width: 520px) {
+  .admin-topbar h1 { max-width: none; }
+  .topbar-actions > button,
+  .topbar-actions > span { display: none; }
+  .role-switch { display: flex; }
+  .topbar-actions .role-switch button {
+    min-width: 48px;
+    min-height: 38px;
+    padding-inline: 6px;
+    font-size: 8px;
   }
 }

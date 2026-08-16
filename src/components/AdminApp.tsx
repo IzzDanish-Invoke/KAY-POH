@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-  dashboardMetrics,
   guideBookingRequests,
+  liveRatingResponses as initialRatingResponses,
+  liveTours as initialLiveTours,
   members as initialMembers,
-  monthlyBookings,
   packages,
   tourGuides,
 } from "@/data/data";
@@ -16,6 +16,7 @@ import type { TourGuide } from "@/types/tour-guide";
 import type { TourPackage } from "@/types/tour-package";
 import type { Member } from "@/types/member";
 import type { Booking, BookingStatus } from "@/types/booking";
+import type { LiveTour, RatingResponse } from "@/types/live-tour";
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: "⌂", badge: undefined },
@@ -147,7 +148,15 @@ export default function AdminApp() {
     ),
   );
   const [bookings, setBookings] = useState<Booking[]>(guideBookingRequests as Booking[]);
-  useEffect(() => { const controller = new AbortController(); fetch("/api/bookings", { cache: "no-store", signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<Booking[]> : Promise.reject()).then((records) => { setBookings(records); setBookingStatuses(Object.fromEntries(records.map((item) => [item.id, item.status]))); }).catch(() => undefined); return () => controller.abort(); }, []);
+  const [memberRecords, setMemberRecords] = useState<Member[]>(initialMembers as Member[]);
+  const [ratingResponses, setRatingResponses] = useState<RatingResponse[]>(initialRatingResponses as RatingResponse[]);
+  const [liveTourRecords, setLiveTourRecords] = useState<LiveTour[]>(initialLiveTours as LiveTour[]);
+  useEffect(() => { const controller = new AbortController(); Promise.all([
+    fetch("/api/bookings", { cache: "no-store", signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<Booking[]> : Promise.reject()),
+    fetch("/api/members", { cache: "no-store", signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<Member[]> : Promise.reject()),
+    fetch("/api/rating-responses", { cache: "no-store", signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<RatingResponse[]> : Promise.reject()),
+    fetch("/api/live-tours", { cache: "no-store", signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<LiveTour[]> : Promise.reject()),
+  ]).then(([nextBookings, nextMembers, nextResponses, nextTours]) => { setBookings(nextBookings); setBookingStatuses(Object.fromEntries(nextBookings.map((item) => [item.id, item.status]))); setMemberRecords(nextMembers); setRatingResponses(nextResponses); setLiveTourRecords(nextTours); }).catch(() => undefined); return () => controller.abort(); }, []);
 
   const visibleNavigation =
     role === "admin"
@@ -169,6 +178,10 @@ export default function AdminApp() {
     setActive("dashboard");
     setMobileNav(false);
   };
+  const pendingRequests = Object.values(bookingStatuses).filter((status) => status === "Pending").length;
+  const activeTourCount = new Set(liveTourRecords.filter((tour) => ["Live", "Starting soon"].includes(tour.status)).map((tour) => tour.bookingId)).size;
+  const notificationCount = pendingRequests + activeTourCount;
+  const todayLabel = new Intl.DateTimeFormat("en-MY", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kuala_Lumpur" }).format(new Date());
 
   return (
     <div className="admin-shell">
@@ -194,7 +207,7 @@ export default function AdminApp() {
             >
               <span className="nav-symbol">{item.icon}</span>
               {role === "guide" ? guideLabels[item.id] : item.label}
-              {item.badge && <b>{item.badge}</b>}
+              {(item.id === "live" ? activeTourCount : item.id === "guides" ? pendingRequests : 0) > 0 && <b>{item.id === "live" ? activeTourCount : pendingRequests}</b>}
             </button>
           ))}
         </nav>
@@ -246,17 +259,17 @@ export default function AdminApp() {
               </button>
             </div>
             <button aria-label="Notifications">
-              ♢<b>3</b>
+              ♢{notificationCount > 0 && <b>{notificationCount}</b>}
             </button>
-            <span>15 Aug 2026</span>
+            <span>{todayLabel}</span>
           </div>
         </header>
         <main className="admin-main">
           {active === "dashboard" &&
             (role === "admin" ? (
               <>
-                <Dashboard goTo={setActive} bookings={bookings} bookingStatuses={bookingStatuses} />
-                <Stats />
+                <Dashboard goTo={setActive} bookings={bookings} bookingStatuses={bookingStatuses} members={memberRecords} responses={ratingResponses} tours={liveTourRecords} />
+                <Stats bookings={bookings} bookingStatuses={bookingStatuses} members={memberRecords} responses={ratingResponses} tours={liveTourRecords} />
               </>
             ) : (
               <GuideDashboard
@@ -299,14 +312,39 @@ function Dashboard({
   goTo,
   bookings,
   bookingStatuses,
+  members,
+  responses,
+  tours,
 }: {
   goTo: (page: PageId) => void;
   bookings: Booking[];
   bookingStatuses: Record<string, BookingStatus>;
+  members: Member[];
+  responses: RatingResponse[];
+  tours: LiveTour[];
 }) {
+  const [renderTimestamp] = useState(() => Date.now());
   const pending = Object.values(bookingStatuses).filter(
     (status) => status === "Pending",
   ).length;
+  const statusOf = (booking: Booking) => bookingStatuses[booking.id] ?? booking.status;
+  const confirmed = bookings.filter((booking) => ["Accepted", "Completed"].includes(statusOf(booking)));
+  const latestTimestamp = Math.max(...bookings.map((booking) => Date.parse(booking.createdAt) || 0), renderTimestamp);
+  const latestDate = new Date(latestTimestamp);
+  const currentMonth = confirmed.filter((booking) => { const date = new Date(booking.createdAt); return date.getUTCFullYear() === latestDate.getUTCFullYear() && date.getUTCMonth() === latestDate.getUTCMonth(); });
+  const monthRevenue = currentMonth.reduce((sum, booking) => sum + booking.value, 0);
+  const activeTravellers = confirmed.filter((booking) => statusOf(booking) === "Accepted").reduce((sum, booking) => sum + booking.guests, 0);
+  const averageRating = responses.length ? responses.reduce((sum, response) => sum + response.rating, 0) / responses.length : 0;
+  const metrics = [
+    { id: "revenue", label: "Confirmed revenue this month", value: money(monthRevenue), note: `${currentMonth.length} confirmed bookings` },
+    { id: "bookings", label: "Total booking requests", value: String(bookings.length), note: `${pending} awaiting guides` },
+    { id: "travellers", label: "Upcoming travellers", value: String(activeTravellers), note: `${confirmed.length} confirmed tours` },
+    { id: "rating", label: "Average tour rating", value: averageRating ? averageRating.toFixed(2) : "—", note: `${responses.length} responses` },
+  ];
+  const sevenDaysAgo = latestTimestamp - 7 * 86400000;
+  const newMembers = members.filter((member) => (Date.parse(member.joined) || 0) >= sevenDaysAgo).length;
+  const draftPackages = (packages as TourPackage[]).filter((item) => !item.published).length;
+  const activeTours = new Set(tours.filter((tour) => ["Live", "Starting soon"].includes(tour.status)).map((tour) => tour.bookingId)).size;
   return (
     <>
       <section className="admin-welcome">
@@ -320,16 +358,14 @@ function Dashboard({
         </button>
       </section>
       <section className="metric-grid">
-        {dashboardMetrics.map((item, index) => (
+        {metrics.map((item, index) => (
           <article key={item.id}>
             <div className={`metric-icon metric-${index}`}>
               {["RM", "▤", "♙", "★"][index]}
             </div>
             <p>{item.label}</p>
             <strong>{item.value}</strong>
-            <span>
-              ↑ {item.change} <small>vs last month</small>
-            </span>
+            <span>{item.note}</span>
           </article>
         ))}
       </section>
@@ -350,7 +386,7 @@ function Dashboard({
               Detailed analytics ↓
             </button>
           </header>
-          <MiniChart />
+          <MiniChart bookings={bookings} bookingStatuses={bookingStatuses} />
         </section>
         <section className="admin-card attention-card">
           <header>
@@ -370,7 +406,7 @@ function Dashboard({
           <button onClick={() => goTo("members")}>
             <span className="attention-icon orange">♙</span>
             <div>
-              <strong>5 new members</strong>
+              <strong>{newMembers} new members</strong>
               <small>Joined in the last 7 days</small>
             </div>
             <b>→</b>
@@ -378,10 +414,14 @@ function Dashboard({
           <button onClick={() => goTo("packages")}>
             <span className="attention-icon blue">▣</span>
             <div>
-              <strong>1 draft package</strong>
+              <strong>{draftPackages} draft packages</strong>
               <small>Not visible on the website</small>
             </div>
             <b>→</b>
+          </button>
+          <button onClick={() => goTo("live")}>
+            <span className="attention-icon blue">◉</span>
+            <div><strong>{activeTours} tours active soon</strong><small>Live or starting soon</small></div><b>→</b>
           </button>
         </section>
       </div>
@@ -402,12 +442,20 @@ function Dashboard({
   );
 }
 
-function MiniChart() {
-  const max = Math.max(...monthlyBookings.map((item) => item.bookings));
+function bookingMonths(bookings: Booking[], count = 8) {
+  const anchorValue = Math.max(...bookings.map((item) => Date.parse(item.createdAt) || 0), 0);
+  const anchor = new Date(anchorValue); anchor.setUTCDate(1);
+  return Array.from({ length: count }, (_, index) => { const date = new Date(Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth() - (count - index - 1), 1)); return { key: `${date.getUTCFullYear()}-${date.getUTCMonth()}`, month: new Intl.DateTimeFormat("en-MY", { month: "short", timeZone: "UTC" }).format(date), bookings: 0, revenue: 0 }; });
+}
+
+function MiniChart({ bookings, bookingStatuses }: { bookings: Booking[]; bookingStatuses: Record<string, BookingStatus> }) {
+  const months = bookingMonths(bookings);
+  bookings.filter((item) => ["Accepted", "Completed"].includes(bookingStatuses[item.id] ?? item.status)).forEach((booking) => { const date = new Date(booking.createdAt); const month = months.find((item) => item.key === `${date.getUTCFullYear()}-${date.getUTCMonth()}`); if (month) month.bookings += 1; });
+  const max = Math.max(...months.map((item) => item.bookings), 1);
   return (
     <div className="mini-chart">
-      {monthlyBookings.map((item) => (
-        <div className="bar-column" key={item.month}>
+      {months.map((item) => (
+        <div className="bar-column" key={item.key}>
           <strong>{item.bookings}</strong>
           <div style={{ height: `${(item.bookings / max) * 145}px` }} />
           <span>{item.month}</span>
@@ -470,6 +518,7 @@ function GuideDashboard({
           <small>{currentGuide?.reviews ?? 0} traveller reviews</small>
         </article>
       </section>
+      <GuidePerformance bookings={myBookings} bookingStatuses={bookingStatuses} />
       <section className="admin-card dashboard-bookings">
         <header>
           <div>
@@ -491,13 +540,62 @@ function GuideDashboard({
   );
 }
 
-function Stats() {
+function GuidePerformance({
+  bookings,
+  bookingStatuses,
+}: {
+  bookings: Booking[];
+  bookingStatuses: Record<string, BookingStatus>;
+}) {
+  const statusOf = (booking: Booking) => bookingStatuses[booking.id] ?? booking.status;
+  const confirmed = bookings.filter((booking) => ["Accepted", "Completed"].includes(statusOf(booking)));
+  const completed = bookings.filter((booking) => statusOf(booking) === "Completed");
+  const pending = bookings.filter((booking) => statusOf(booking) === "Pending");
+  const decided = bookings.filter((booking) => statusOf(booking) !== "Pending");
+  const revenue = confirmed.reduce((sum, booking) => sum + booking.value, 0);
+  const completedRevenue = completed.reduce((sum, booking) => sum + booking.value, 0);
+  const pendingRevenue = pending.reduce((sum, booking) => sum + booking.value, 0);
+  const travellers = confirmed.reduce((sum, booking) => sum + booking.guests, 0);
+  const acceptanceRate = decided.length ? Math.round((confirmed.length / decided.length) * 100) : 0;
+  const averageValue = confirmed.length ? revenue / confirmed.length : 0;
+  const byPackage = Object.values(confirmed.reduce<Record<string, { name: string; revenue: number; tours: number; travellers: number }>>((groups, booking) => {
+    const group = groups[booking.packageId] ?? { name: booking.packageName, revenue: 0, tours: 0, travellers: 0 };
+    group.revenue += booking.value; group.tours += 1; group.travellers += booking.guests; groups[booking.packageId] = group; return groups;
+  }, {})).sort((a, b) => b.revenue - a.revenue);
+  const maxPackageRevenue = Math.max(...byPackage.map((item) => item.revenue), 1);
+
+  return <section className="guide-performance">
+    <header><div><p className="admin-eyebrow">My performance</p><h2>Statistics & revenue</h2><p>Calculated from your persistent booking requests and their current statuses.</p></div><span>Confirmed booking value</span></header>
+    <div className="guide-stat-grid">
+      <article className="guide-stat-revenue"><small>Confirmed revenue</small><strong>{money(revenue)}</strong><span>{money(completedRevenue)} from completed tours</span></article>
+      <article><small>Confirmed tours</small><strong>{confirmed.length}</strong><span>{completed.length} completed</span></article>
+      <article><small>Travellers served</small><strong>{travellers}</strong><span>Across accepted tours</span></article>
+      <article><small>Acceptance rate</small><strong>{acceptanceRate}%</strong><span>{decided.length} decided requests</span></article>
+      <article><small>Average booking</small><strong>{money(Math.round(averageValue))}</strong><span>Per confirmed tour</span></article>
+      <article><small>Pending pipeline</small><strong>{money(pendingRevenue)}</strong><span>{pending.length} awaiting response</span></article>
+    </div>
+    <div className="guide-revenue-breakdown admin-card"><header><div><h3>Revenue by package</h3><p>Accepted and completed bookings assigned to you</p></div></header>{byPackage.length ? <div>{byPackage.map((item) => <article key={item.name}><div><strong>{item.name}</strong><small>{item.tours} tour{item.tours === 1 ? "" : "s"} · {item.travellers} travellers</small></div><i><b style={{ width: `${(item.revenue / maxPackageRevenue) * 100}%` }} /></i><strong>{money(item.revenue)}</strong></article>)}</div> : <p className="empty-state">Revenue will appear after a booking is accepted.</p>}</div>
+  </section>;
+}
+
+function Stats({ bookings, bookingStatuses, members, responses, tours }: { bookings: Booking[]; bookingStatuses: Record<string, BookingStatus>; members: Member[]; responses: RatingResponse[]; tours: LiveTour[] }) {
   const [period, setPeriod] = useState("8 months");
-  const packagePerformance = [
-    { bookings: 62, revenue: 24738, capacity: 86 },
-    { bookings: 49, revenue: 22491, capacity: 73 },
-    { bookings: 37, revenue: 25863, capacity: 61 },
-  ];
+  const [renderTimestamp] = useState(() => Date.now());
+  const anchor = Math.max(...bookings.map((item) => Date.parse(item.createdAt) || 0), renderTimestamp);
+  const periodStart = new Date(anchor);
+  if (period === "30 days") periodStart.setUTCDate(periodStart.getUTCDate() - 30); else periodStart.setUTCMonth(periodStart.getUTCMonth() - (period === "This quarter" ? 3 : 8));
+  const periodBookings = bookings.filter((item) => (Date.parse(item.createdAt) || 0) >= periodStart.getTime());
+  const confirmed = periodBookings.filter((item) => ["Accepted", "Completed"].includes(bookingStatuses[item.id] ?? item.status));
+  const totalRevenue = confirmed.reduce((sum, item) => sum + item.value, 0);
+  const conversion = periodBookings.length ? Math.round((confirmed.length / periodBookings.length) * 100) : 0;
+  const repeatMembers = members.filter((member) => member.bookings > 1).length;
+  const repeatRate = members.length ? Math.round((repeatMembers / members.length) * 100) : 0;
+  const monthCount = period === "30 days" ? 2 : period === "This quarter" ? 3 : 8;
+  const monthly = bookingMonths(bookings, monthCount);
+  confirmed.forEach((booking) => { const date = new Date(booking.createdAt); const month = monthly.find((item) => item.key === `${date.getUTCFullYear()}-${date.getUTCMonth()}`); if (month) { month.bookings += 1; month.revenue += booking.value; } });
+  const maxRevenue = Math.max(...monthly.map((item) => item.revenue), 1);
+  const packagePerformance = (packages as TourPackage[]).map((pkg) => { const records = confirmed.filter((booking) => booking.packageId === pkg.id); return { package: pkg, bookings: records.length, revenue: records.reduce((sum, booking) => sum + booking.value, 0), share: confirmed.length ? Math.round((records.length / confirmed.length) * 100) : 0 }; });
+  const guidePerformance = (tourGuides as TourGuide[]).map((guide) => { const records = confirmed.filter((booking) => booking.guideId === guide.id); const tourIds = new Set(tours.filter((tour) => tour.guideId === guide.id).map((tour) => tour.id)); const guideResponses = responses.filter((response) => tourIds.has(response.tourId)); return { guide, tours: records.length, revenue: records.reduce((sum, booking) => sum + booking.value, 0), rating: guideResponses.length ? guideResponses.reduce((sum, response) => sum + response.rating, 0) / guideResponses.length : guide.rating }; }).sort((a, b) => b.revenue - a.revenue || b.rating - a.rating);
   return (
     <section id="performance" className="dashboard-performance">
       <section className="admin-section-head">
@@ -519,18 +617,18 @@ function Stats() {
       <section className="stats-highlight">
         <article>
           <p>Total revenue</p>
-          <strong>RM137,800</strong>
-          <span>↑ 24.3% year to date</span>
+          <strong>{money(totalRevenue)}</strong>
+          <span>{confirmed.length} confirmed bookings</span>
         </article>
         <article>
-          <p>Booking conversion</p>
-          <strong>8.4%</strong>
-          <span>↑ 1.2% from last period</span>
+          <p>Booking confirmation rate</p>
+          <strong>{conversion}%</strong>
+          <span>{confirmed.length} of {periodBookings.length} requests confirmed</span>
         </article>
         <article>
           <p>Repeat travellers</p>
-          <strong>31%</strong>
-          <span>102 returning members</span>
+          <strong>{repeatRate}%</strong>
+          <span>{repeatMembers} returning members</span>
         </article>
       </section>
       <div className="admin-two-col stats-layout">
@@ -545,10 +643,10 @@ function Stats() {
             </span>
           </header>
           <div className="revenue-chart">
-            {monthlyBookings.map((item) => (
-              <div key={item.month}>
+            {monthly.map((item) => (
+              <div key={item.key}>
                 <span>{money(item.revenue)}</span>
-                <i style={{ height: `${item.revenue / 160}px` }} />
+                <i style={{ height: `${Math.max((item.revenue / maxRevenue) * 180, item.revenue ? 8 : 0)}px` }} />
                 <small>{item.month}</small>
               </div>
             ))}
@@ -561,7 +659,7 @@ function Stats() {
               <p>By guest satisfaction</p>
             </div>
           </header>
-          {tourGuides.map((guide, i) => (
+          {guidePerformance.map(({ guide, tours: guideTours, revenue, rating }, i) => (
             <div className="rank-row" key={guide.id}>
               <b>{i + 1}</b>
               <span className={`guide-avatar avatar-${guide.color}`}>
@@ -569,9 +667,9 @@ function Stats() {
               </span>
               <div>
                 <strong>{guide.name}</strong>
-                <small>{guide.tours} tours</small>
+                <small>{guideTours} tours · {money(revenue)}</small>
               </div>
-              <span>★ {guide.rating}</span>
+              <span>{rating ? `★ ${rating.toFixed(1)}` : "No ratings"}</span>
             </div>
           ))}
         </section>
@@ -584,12 +682,7 @@ function Stats() {
           </div>
         </header>
         <div className="performance-grid">
-          {packages.map((item, index) => {
-            const performance = packagePerformance[index] ?? {
-              bookings: 0,
-              revenue: 0,
-              capacity: 0,
-            };
+          {packagePerformance.map(({ package: item, bookings: packageBookings, revenue, share }) => {
             return (
               <article key={item.id}>
                 <span className={`performance-art ${item.color}`}>
@@ -598,13 +691,12 @@ function Stats() {
                 <div>
                   <h4>{item.title}</h4>
                   <p>
-                    {performance.bookings} bookings ·{" "}
-                    {money(performance.revenue)}
+                    {packageBookings} bookings · {money(revenue)}
                   </p>
                   <div>
-                    <i style={{ width: `${performance.capacity}%` }} />
+                    <i style={{ width: `${share}%` }} />
                   </div>
-                  <small>{performance.capacity}% capacity</small>
+                  <small>{share}% of confirmed bookings</small>
                 </div>
               </article>
             );
@@ -811,6 +903,11 @@ function Guides({
   const pendingCount = Object.values(bookingStatuses).filter(
     (status) => status === "Pending",
   ).length;
+  const bookingStatsFor = (guideId: string) => {
+    const assigned = bookings.filter((booking) => booking.guideId === guideId);
+    const confirmed = assigned.filter((booking) => ["Accepted", "Completed"].includes(bookingStatuses[booking.id] ?? booking.status));
+    return { tours: confirmed.length, revenue: confirmed.reduce((sum, booking) => sum + booking.value, 0), travellers: confirmed.reduce((sum, booking) => sum + booking.guests, 0) };
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -975,7 +1072,7 @@ function Guides({
       )}
       {tab === "guides" ? (
         <div className="guide-grid">
-          {guideList.map((guide) => (
+          {guideList.map((guide) => { const statistics = bookingStatsFor(guide.id); return (
             <article className="guide-card" key={guide.id}>
               <div className="guide-card-top">
                 <span className={`guide-avatar large avatar-${guide.color}`}>
@@ -1003,12 +1100,16 @@ function Guides({
                   <small>{guide.reviews} reviews</small>
                 </span>
                 <span>
-                  <strong>{guide.tours}</strong>
-                  <small>Tours</small>
+                  <strong>{statistics.tours}</strong>
+                  <small>Confirmed tours</small>
                 </span>
                 <span>
                   <strong>{guide.acceptance}%</strong>
                   <small>Accept rate</small>
+                </span>
+                <span>
+                  <strong>{money(statistics.revenue)}</strong>
+                  <small>{statistics.travellers} travellers</small>
                 </span>
               </div>
               <footer>
@@ -1036,7 +1137,7 @@ function Guides({
                 </div>
               </footer>
             </article>
-          ))}
+          ); })}
         </div>
       ) : (
         <section className="booking-request-list">
@@ -1167,12 +1268,16 @@ function Guides({
                   <small>{selectedGuide.reviews} reviews</small>
                 </span>
                 <span>
-                  <strong>{selectedGuide.tours}</strong>
-                  <small>Tours</small>
+                  <strong>{bookingStatsFor(selectedGuide.id).tours}</strong>
+                  <small>Confirmed tours</small>
                 </span>
                 <span>
                   <strong>{selectedGuide.acceptance}%</strong>
                   <small>Accept rate</small>
+                </span>
+                <span>
+                  <strong>{money(bookingStatsFor(selectedGuide.id).revenue)}</strong>
+                  <small>{bookingStatsFor(selectedGuide.id).travellers} travellers</small>
                 </span>
               </div>
             </div>
