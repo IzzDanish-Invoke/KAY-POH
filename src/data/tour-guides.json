@@ -145,33 +145,5 @@
         "guest": "The Tan family, KL"
       }
     ]
-  },
-  {
-    "name": "rah",
-    "email": "asd@c.c",
-    "title": "1231",
-    "bio": "123",
-    "languages": [
-      "English",
-      "Malay"
-    ],
-    "specialties": [
-      "Mobility support"
-    ],
-    "status": "Available",
-    "licensed": true,
-    "yearsExperience": 12,
-    "expertise": "123",
-    "perks": [
-      "123"
-    ],
-    "id": "KP-G006",
-    "initials": "R",
-    "rating": 0,
-    "reviews": 0,
-    "tours": 0,
-    "acceptance": 0,
-    "color": "aqua",
-    "testimonials": []
   }
 ]
